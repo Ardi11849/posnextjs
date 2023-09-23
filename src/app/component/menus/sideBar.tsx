@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from 'next/navigation';
 import { useAnimate, stagger, motion } from "framer-motion";
 import { Menus } from '../../../../global/menus';
+import { storeTokenInLocalStorage } from '../../../../global/apis';
 // import { getTokenFromLocalStorage, storeTokenInLocalStorage } from "../../global/apis"
 
 const staggerMenuItems = stagger(0.1, { startDelay: 0.15 });
@@ -64,8 +65,8 @@ const Sidebar = () => {
     }, []);
 
     const logout = async () => {
-        // storeTokenInLocalStorage('null');
-        // router.replace('/');
+        storeTokenInLocalStorage('null');
+        router.replace('/');
     }
 
     const path = usePathname();
@@ -92,6 +93,22 @@ const Sidebar = () => {
                                 </Link>
                             </li>
                         ))}
+                        <motion.button
+                            className='flex nav-item rounded text-slate-400'
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => { setIsOpen(!isOpen), setFrom('.logout') }}
+                            key={Math.random()}
+                        >
+                            <p className="text-sm font-bold float-left px-1 py-1">logout</p>
+                        </motion.button>
+                        <li className={`flex nav-item rounded hover:bg-blue-500 focus:ring-blue-300`}>
+                            <button onClick={logout}>
+                                <div className="px-3 py-3 float-left">
+                                    {/* <FontAwesomeIcon className='w-6 h-6' icon='right-from-bracket' />    */}
+                                </div>
+                                <p className="text-l text-black font-bold float-left px-3 py-3">Logout</p>
+                            </button>
+                        </li>
                     </ul>
                     <hr />
                 </div>
