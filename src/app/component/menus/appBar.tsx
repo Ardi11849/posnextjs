@@ -4,7 +4,9 @@ import { IconSearch, IconList } from '@tabler/icons-react';
 import { useState } from "react";
 import { motion, Variants } from "framer-motion";
 import Sidebar from './sideBar';
-import { Card, CardContent, Grid, Typography, CardMedia } from '@mui/material';
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
 
 const show = {
     opacity: 1,
@@ -68,7 +70,7 @@ const Header = ({ title, url }: HeaderProps) => {
                             <img className='rounded-full ring-2 ring-white' src="https://image.gambarpng.id/pngs/gambar-transparent-boy-cartoon_65401.png" alt="" />
                         </motion.button>
                         <motion.div
-                            className='bg-white w-36 absolute right-[0px]'
+                            className='bg-white box-content p-4 border-4 w-40 absolute top-[60px] right-[-6px]'
                             variants={{
                                 open: {
                                     clipPath: "inset(0% 0% 0% 0% round 10px)",
@@ -91,24 +93,41 @@ const Header = ({ title, url }: HeaderProps) => {
                             }}
                             style={{ pointerEvents: isOpen ? "auto" : "none" }}
                         >
-                            <Card className="rounded-lg" sx={{ display: 'flex' }}>
-                                <Grid container direction="column">
-                                    <Grid item>
-                                        <CardContent>
-                                            <Typography variant="h6" component="div">
-                                                test
-                                            </Typography>
-                                        </CardContent>
-                                    </Grid>
-                                    <Grid item sx={{ paddingBottom: '10px' }}>
-                                        <CardMedia
-                                            component="img"
-                                            sx={{ height: '200px' }}
-                                            image='{row2.image}'
-                                            alt="Live from space album cover" />
-                                    </Grid>
-                                </Grid>
-                            </Card>
+                            <nav aria-label="main mailbox folders">
+                                <List>
+                                    <ListItem disablePadding>
+                                        <ListItemButton>
+                                            <ListItemIcon>
+                                                <FontAwesomeIcon icon={faGear} />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Setting" />
+                                        </ListItemButton>
+                                    </ListItem>
+                                    <ListItem disablePadding>
+                                        <ListItemButton>
+                                            <ListItemIcon>
+                                                <FontAwesomeIcon icon={faGear} />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Drafts" />
+                                        </ListItemButton>
+                                    </ListItem>
+                                </List>
+                            </nav>
+                            <Divider />
+                            <nav aria-label="secondary mailbox folders">
+                                <List>
+                                    <ListItem disablePadding>
+                                        <ListItemButton>
+                                            <ListItemText primary="Trash" />
+                                        </ListItemButton>
+                                    </ListItem>
+                                    <ListItem disablePadding>
+                                        <ListItemButton component="a" href="#simple-list">
+                                            <ListItemText primary="Spam" />
+                                        </ListItemButton>
+                                    </ListItem>
+                                </List>
+                            </nav>
                         </motion.div>
                     </motion.nav>
                 </div>

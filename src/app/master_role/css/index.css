@@ -1,0 +1,25 @@
+.switch {
+    background-color: rgba(73, 59, 59, 0.4);
+    display: flex;
+    justify-content: flex-start;
+    border-radius: 50px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.switch[data-isOn="true"] {
+    justify-content: flex-end;
+    background-color: rgb(53, 241, 15);
+}
+
+.handle {
+    background-color: rgb(228, 228, 228);
+    border-radius: 40px;
+}
+
+.sticky-column {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background-color: rgb(228, 228, 228);
+}

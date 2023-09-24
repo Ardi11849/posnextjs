@@ -1,14 +1,15 @@
 // components/Sidebar.js
 'use client'
-// import { FontAwesomeIcon } from '../../lib/fontawesome';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from "react";
 import { usePathname } from 'next/navigation';
-import { useAnimate, stagger, motion } from "framer-motion";
-import { Menus } from '../../../../global/menus';
-import { storeTokenInLocalStorage } from '../../../../global/apis';
-// import { getTokenFromLocalStorage, storeTokenInLocalStorage } from "../../global/apis"
+import { useAnimate, stagger, motion, color } from "framer-motion";
+import { Menus } from '../../../global/menus';
+import { List, ListItemButton, ListItemIcon, ListItemText, Divider, ListSubheader, Collapse } from '@mui/material';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { FontAwesomeIcon } from '@/lib/fontawesome';
+import { getTokenFromLocalStorage, storeTokenInLocalStorage } from "@/global/apis"
 
 const staggerMenuItems = stagger(0.1, { startDelay: 0.15 });
 
@@ -52,12 +53,17 @@ const Sidebar = () => {
     const router = useRouter()
 
     const { push } = useRouter();
+    const [open, setOpen] = useState(true);
+
+    const handleClick = () => {
+        setOpen(!open);
+    };
 
     const redirectIfAuthenticated = async () => {
-        // const isUserAuthenticated = await getTokenFromLocalStorage();
-        // if (isUserAuthenticated == null || isUserAuthenticated == 'null' || isUserAuthenticated == undefined) {
-        //     push('/');
-        // }
+        const isUserAuthenticated = await getTokenFromLocalStorage();
+        if (isUserAuthenticated == null || isUserAuthenticated == 'null' || isUserAuthenticated == undefined) {
+            push('/');
+        }
     };
 
     useEffect(() => {
@@ -71,49 +77,61 @@ const Sidebar = () => {
 
     const path = usePathname();
     return (
-        <nav className="menu pt-8" ref={scope}>
+        <nav className="menu" ref={scope}>
             {Menus.map((row, index) => (
                 <div key={index}>
-                    <motion.button
-                        className='flex nav-item rounded text-slate-400'
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() => { setIsOpen(!isOpen), setFrom('.' + row.id) }}
-                        key={Math.random()}
+                    <List disablePadding
+                        sx={{ width: '100%', color: 'black', cursor: 'pointer', bgcolor: 'transparent' }}
+                        component="nav"
+                        aria-labelledby="nested-list-subheader"
+                        onClick={handleClick}
+                        subheader={
+                            <ListSubheader component="div" id="nested-list-subheader">
+                                {row.labelGroup}  {open ? <ExpandLess /> : <ExpandMore />}
+                            </ListSubheader>
+                        }
                     >
-                        <p className="text-sm font-bold float-left px-1 py-1">{row.labelGroup}</p>
-                    </motion.button>
-                    <ul key={Math.random()} className={`${row.id} ${isOpen == false && from == '.' + row.id ? 'hidden' : ''}`}>
+                    </List>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
                         {row.list.map((row2, index2) => (
-                            <li key={Math.random()} className={`flex ${row.id} nav-item rounded hover:bg-blue-500 focus:ring-blue-300 ${path === row2.link ? 'text-blue-500 bg-blue-500' : ''}`}>
-                                <Link href={row2.link}>
-                                    <div className="px-3 py-3 float-left">
-                                        {/* <FontAwesomeIcon className='w-6 h-6' icon='chart-line' /> */}
-                                    </div>
-                                    <p className="text-sm text-black float-left px-3 py-3">{row2.nama}</p>
-                                </Link>
-                            </li>
+                            <List key={index2} component="div" disablePadding>
+                                <ListItemButton component="a" href={row2.link}>
+                                    <ListItemIcon>
+                                        <FontAwesomeIcon
+                                            //@ts-ignore
+                                            icon={row2.icon}
+                                            size="xl"
+                                        />
+                                    </ListItemIcon>
+                                    <ListItemText secondary={row2.nama} />
+                                </ListItemButton>
+                            </List>
                         ))}
-                        <motion.button
-                            className='flex nav-item rounded text-slate-400'
-                            whileTap={{ scale: 0.97 }}
-                            onClick={() => { setIsOpen(!isOpen), setFrom('.logout') }}
-                            key={Math.random()}
-                        >
-                            <p className="text-sm font-bold float-left px-1 py-1">logout</p>
-                        </motion.button>
-                        <li className={`flex nav-item rounded hover:bg-blue-500 focus:ring-blue-300`}>
-                            <button onClick={logout}>
-                                <div className="px-3 py-3 float-left">
-                                    {/* <FontAwesomeIcon className='w-6 h-6' icon='right-from-bracket' />    */}
-                                </div>
-                                <p className="text-l text-black font-bold float-left px-3 py-3">Logout</p>
-                            </button>
-                        </li>
-                    </ul>
+                    </Collapse>
+                    <Divider />
                     <hr />
                 </div>
-            ))}
-        </nav>
+            ))
+            }
+            <ul>
+                <motion.button
+                    className='flex nav-item rounded text-slate-400'
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => { setIsOpen(!isOpen), setFrom('.logout') }}
+                    key={Math.random()}
+                >
+                    <p className="text-sm font-bold float-left px-1 py-1">logout</p>
+                </motion.button>
+                <li className={`flex nav-item rounded hover:bg-blue-500 focus:ring-blue-300`}>
+                    <button onClick={logout}>
+                        <div className="px-3 py-3 float-left">
+                            <FontAwesomeIcon className='w-6 h-6' icon='right-from-bracket' />
+                        </div>
+                        <p className="text-l text-black font-bold float-left px-3 py-3">Logout</p>
+                    </button>
+                </li>
+            </ul>
+        </nav >
     );
 };
 
