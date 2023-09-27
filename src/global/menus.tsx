@@ -2,6 +2,7 @@ export const Menus = [
     {
         "id": 'transasksi',
         "labelGroup": "Transaksi",
+        "active": true,
         "list": [
             {
                 'id': 1,
@@ -57,6 +58,7 @@ export const Menus = [
     {
         "id": 'master',
         "labelGroup": "Master",
+        "active": true,
         "list": [
             {
                 'id': 1,

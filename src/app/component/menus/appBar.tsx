@@ -40,7 +40,7 @@ const Header = ({ title, url }: HeaderProps) => {
     return (
         <>
             <header className="bg-gray-50 py-5">
-                <div className="pl-4 grid-cols-3 container-fluid mx-auto flex items-center">
+                <div className="grid-cols-3 container-fluid mx-auto flex items-center">
                     <div className="text-black font-semibold text-xl pr-[5rem]"><img className="px-1 pt-1" width={150} src="https://shekinahland.com/wp-content/uploads/2022/01/logoipsum-logo-17-01.png" alt="ChitChat Logo" /></div>
                     <motion.button
                         className='rounded-lg'
@@ -48,7 +48,7 @@ const Header = ({ title, url }: HeaderProps) => {
                         onClick={() => setIsVisible(!isVisible)}
                     ><IconList className="w-7 h-7" />
                     </motion.button>
-                    <nav className="space-x-4 pl-4">
+                    <nav className="space-x-4 pl-[2rem]">
                         <div className="relative">
                             <input
                                 type="text"
@@ -132,7 +132,7 @@ const Header = ({ title, url }: HeaderProps) => {
                     </motion.nav>
                 </div>
             </header>
-            <motion.div className='float-left bg-gray-50 w-[17rem] px-6 text-white min-h-max min-h-full min-h-screen' animate={isVisible ? show : hide}> <Sidebar /> </motion.div>
+            <motion.div className='float-left bg-gray-50 w-[17rem] px-6 text-white min-h-screen' animate={isVisible ? show : hide}> <Sidebar /> </motion.div>
         </>
     );
 };

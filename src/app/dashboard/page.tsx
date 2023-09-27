@@ -44,15 +44,15 @@ const Dashboard = () => {
     return (
         <Suspense fallback={<Loading />}>
             <PerfectScrollbar>
-                <AppBar title="Dashboard" url="#" />
                 <div className="px-4">
                     <div className="bg-gray-200 rounded-lg min-h-screen">
+                        <AppBar title="Dashboard" url="/" />
                         {Menus.map((row, index) => (
                             <div key={index}>
                                 <div className="px-4 py-4 text-2xl grid gap-4 font-mono font-bold underline">{row.labelGroup}</div>
                                 <div className="grid lg:grid-cols-5 gap-5 md:grid-cols-3 sm:grid-cols-2 px-4 py-4">
                                     {row.list.map((row2, index2) => (
-                                        <Link key={index2} href={ row2.link }>
+                                        <Link key={index2} href={row2.link}>
                                             <motion.div
                                                 className="hover:cursor-pointer"
                                                 id={row2.id.toString()}

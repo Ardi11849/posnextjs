@@ -1,7 +1,7 @@
 // components/Sidebar.js
 'use client'
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { usePathname } from 'next/navigation';
 import { useAnimate, stagger, motion, color } from "framer-motion";
 import { Menus } from '../../../global/menus';
@@ -53,10 +53,21 @@ const Sidebar = () => {
     const router = useRouter()
 
     const { push } = useRouter();
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState({});
+    useMemo(() => {
+        let datasOpen = {}
+        Menus.map((row, index) => {
+            Object.assign(datasOpen, { [row.id]: true })
+        })
+        setOpen(datasOpen)
+    }, [])
 
-    const handleClick = () => {
-        setOpen(!open);
+    const handleClick = (id: string | number) => {
+        setOpen((prevOpen) => ({
+            ...prevOpen,
+            // @ts-ignore
+            [id]: !open[id]
+        }));
     };
 
     const redirectIfAuthenticated = async () => {
@@ -84,15 +95,26 @@ const Sidebar = () => {
                         sx={{ width: '100%', color: 'black', cursor: 'pointer', bgcolor: 'transparent' }}
                         component="nav"
                         aria-labelledby="nested-list-subheader"
-                        onClick={handleClick}
+                        onClick={() => handleClick(row.id)}
                         subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
-                                {row.labelGroup}  {open ? <ExpandLess /> : <ExpandMore />}
+                                {row.labelGroup}
+                                {
+                                    // @ts-ignore
+                                    open[row.id] ? <ExpandLess /> : <ExpandMore />
+                                }
                             </ListSubheader>
                         }
                     >
                     </List>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
+                    <Collapse
+                        in={
+                            // @ts-ignore
+                            open[row.id]
+                        }
+                        timeout="auto"
+                        unmountOnExit
+                    >
                         {row.list.map((row2, index2) => (
                             <List key={index2} component="div" disablePadding>
                                 <ListItemButton component="a" href={row2.link}>
