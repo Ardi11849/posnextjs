@@ -153,4 +153,18 @@ export const Menus = [
             }
         ]
     },
+    {
+        "id": 'developer',
+        "labelGroup": "Developer",
+        "active": true,
+        "list": [
+            {
+                'id': 1,
+                'nama': 'Menu',
+                'image': 'https://png.pngtree.com/png-clipart/20200701/original/pngtree-hand-drawn-cartoon-list-plant-illustration-png-image_5357532.jpg',
+                'icon': 'list',
+                'link': '/menu'
+            },
+        ]
+    },
 ]

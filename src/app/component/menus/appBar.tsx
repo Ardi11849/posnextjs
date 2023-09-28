@@ -132,7 +132,7 @@ const Header = ({ title, url }: HeaderProps) => {
                     </motion.nav>
                 </div>
             </header>
-            <motion.div className='float-left bg-gray-50 w-[17rem] px-6 text-white min-h-screen' animate={isVisible ? show : hide}> <Sidebar /> </motion.div>
+            <motion.div className='float-left bg-gray-50 w-[17rem] px-6 text-white h-[calc(100vh-6rem)] overflow-y-scroll' animate={isVisible ? show : hide}> <Sidebar /> </motion.div>
         </>
     );
 };

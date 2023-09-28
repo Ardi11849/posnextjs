@@ -5,9 +5,8 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { motion } from "framer-motion";
 import Typography from '@mui/material/Typography';
 import Loading from '../component/loading';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import AppBar from "../component/menus/appBar";
-import { Card, CardContent, Grid, Table, TableBody, TableContainer, TableHead, TableRow, Paper, FormControlLabel, Switch, SwitchProps } from '@mui/material';
+import { Card, CardContent, Grid, Table, TableBody, TableContainer, TableHead, TableRow, Paper, Switch, SwitchProps } from '@mui/material';
 import { Menus } from '@/global/menus';
 import './css/index.css'
 
@@ -106,73 +105,71 @@ export default function HorizontalLinearStepper() {
 
     return (
         <Suspense fallback={<Loading />}>
-            <PerfectScrollbar>
-                <AppBar title="Dashboard" url="#" />
-                <div className="px-4">
-                    <div className="bg-gray-200 rounded-lg min-h-screen">
-                        <div className="grid grid-cols-1 gap-5 px-4 py-4">
-                            <motion.div
-                            // className="hover:cursor-pointer"
-                            >
-                                <Card className="rounded-lg">
-                                    <Grid>
-                                        <Grid item>
-                                            <CardContent>
-                                                <Typography variant="h6" component="div">
-                                                    Master Role
-                                                </Typography>
-                                                <div className=''>
-                                                    <TableContainer className='pt-3 overflow-x-scroll rounded-lg relative' component={Paper}>
-                                                        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                                                            <TableHead className='bg-white '>
-                                                                <TableRow>
-                                                                    <StyledTableCell className='font-bold sticky-column font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400' rowSpan={3}>
-                                                                        Nama Role
+            <AppBar title="Dashboard" url="#" />
+            <div className="px-4">
+                <div className="rounded-lg bg-gray-200 overflow-y-auto h-[calc(100vh-6rem)]">
+                    <div className="grid grid-cols-1 gap-5 px-4 py-4">
+                        <motion.div
+                        // className="hover:cursor-pointer"
+                        >
+                            <Card className="rounded-lg">
+                                <Grid>
+                                    <Grid item>
+                                        <CardContent className='rounded-lg overflow-y-auto'>
+                                            <Typography variant="h6" component="div">
+                                                Master Role
+                                            </Typography>
+                                            <div className=''>
+                                                <TableContainer className='pt-3 overflow-x-scroll rounded-lg relative' component={Paper}>
+                                                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                                                        <TableHead className='bg-white '>
+                                                            <TableRow>
+                                                                <StyledTableCell className='font-bold sticky-column font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400' rowSpan={3}>
+                                                                    Nama Role
+                                                                </StyledTableCell>
+                                                            </TableRow>
+                                                            <TableRow>
+                                                                {Menus.map((row, index) => (
+                                                                    <StyledTableCell key={index} className='font-bold font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400' colSpan={row.list.length + 1}>
+                                                                        {row.labelGroup}
                                                                     </StyledTableCell>
-                                                                </TableRow>
-                                                                <TableRow>
-                                                                    {Menus.map((row, index) => (
-                                                                        <StyledTableCell key={index} className='font-bold font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400' colSpan={row.list.length + 1}>
-                                                                            {row.labelGroup}
-                                                                        </StyledTableCell>
-                                                                    ))}
-                                                                </TableRow>
-                                                                <TableRow>
+                                                                ))}
+                                                            </TableRow>
+                                                            <TableRow>
+                                                                {Menus.map((row, index) => (
+                                                                    row.list.map((row2, index2) => (
+                                                                        <StyledTableCell key={index2} className='font-bold text-center font-mono whitespace-nowrap border-solid border-2 border-gray-400'>{row2.nama}</StyledTableCell>
+                                                                    ))
+                                                                ))}
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {rows.map((row) => (
+                                                                <StyledTableRow key={row.name}>
+                                                                    <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                                                        {row.name}
+                                                                    </StyledTableCell>
                                                                     {Menus.map((row, index) => (
                                                                         row.list.map((row2, index2) => (
-                                                                            <StyledTableCell key={index2} className='font-bold text-center font-mono whitespace-nowrap border-solid border-2 border-gray-400'>{row2.nama}</StyledTableCell>
+                                                                            <StyledTableCell key={index2}>
+                                                                                <IOSSwitch sx={{ m: 1 }} />
+                                                                            </StyledTableCell>
                                                                         ))
                                                                     ))}
-                                                                </TableRow>
-                                                            </TableHead>
-                                                            <TableBody>
-                                                                {rows.map((row) => (
-                                                                    <StyledTableRow key={row.name}>
-                                                                        <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
-                                                                            {row.name}
-                                                                        </StyledTableCell>
-                                                                        {Menus.map((row, index) => (
-                                                                            row.list.map((row2, index2) => (
-                                                                                <StyledTableCell key={index2}>
-                                                                                    <IOSSwitch sx={{ m: 1 }} />
-                                                                                </StyledTableCell>
-                                                                            ))
-                                                                        ))}
-                                                                    </StyledTableRow>
-                                                                ))}
-                                                            </TableBody>
-                                                        </Table>
-                                                    </TableContainer>
-                                                </div>
-                                            </CardContent>
-                                        </Grid>
+                                                                </StyledTableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
+                                            </div>
+                                        </CardContent>
                                     </Grid>
-                                </Card>
-                            </motion.div>
-                        </div>
+                                </Grid>
+                            </Card>
+                        </motion.div>
                     </div>
                 </div>
-            </PerfectScrollbar>
+            </div>
         </Suspense>
     )
 }
