@@ -163,7 +163,7 @@ export const Menus = [
                 'nama': 'Menu',
                 'image': 'https://png.pngtree.com/png-clipart/20200701/original/pngtree-hand-drawn-cartoon-list-plant-illustration-png-image_5357532.jpg',
                 'icon': 'list',
-                'link': '/menu'
+                'link': '/master_menu'
             },
         ]
     },
