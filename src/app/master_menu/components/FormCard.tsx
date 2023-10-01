@@ -1,12 +1,32 @@
 import { Box, Button, Card, CardContent, Divider, Grid, InputLabel, TextField, Typography } from "@mui/material"
 import FormTable from "./FormTable"
+import { useState } from "react"
 
 const FormCard = () => {
+    const [dataDetail, setDataDetail] = useState([{}]);
+    const[labelGroup, setLabelGroup] = useState('');
+    const[namaMenu, setNamaMenu] = useState('');
+    const[icon, setIcon] = useState('');
+    const[linkModule, setLinkModule] = useState('');
+    const[imageUrl, setImageUrl] = useState('');
+
+    const handleAdToList = () => {
+        setDataDetail((prevData) => [
+            ...prevData,
+            {
+                label_group: labelGroup,
+                nama_menu: namaMenu,
+                icon: icon,
+                link_module: linkModule,
+                image_url: imageUrl
+            }
+        ])
+    }
     return (
         <>
             <Card className="rounded-lg">
                 <CardContent className='rounded-lg overflow-y-auto'>
-                    <Box sx={{ padding: 5 }}>
+                    <Box>
                         <Typography variant="h6" gutterBottom sx={{ paddingBottom: 5 }}>
                             Tambah Menu
                         </Typography>
@@ -31,6 +51,8 @@ const FormCard = () => {
                                     size="small"
                                     multiline
                                     fullWidth
+                                    value={labelGroup}
+                                    onChange={(e) => setLabelGroup(e.target.value)}
                                 />
                             </Grid>
                         </Grid>
@@ -64,6 +86,8 @@ const FormCard = () => {
                                     label="Nama Menu"
                                     size="small"
                                     multiline
+                                    value={namaMenu}
+                                    onChange={(e) => {setNamaMenu(e.target.value)}}
                                     fullWidth
                                 />
                             </Grid>
@@ -86,6 +110,8 @@ const FormCard = () => {
                                     label="Icon"
                                     multiline
                                     fullWidth
+                                    value={icon}
+                                    onChange={(e) => {setIcon(e.target.value)}}
                                     size="small"
                                     autoComplete="off"
                                 />
@@ -111,6 +137,8 @@ const FormCard = () => {
                                     fullWidth
                                     size="small"
                                     autoComplete="off"
+                                    value={linkModule}
+                                    onChange={(e) => {setLinkModule(e.target.value)}}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
@@ -133,18 +161,20 @@ const FormCard = () => {
                                     size="small"
                                     multiline
                                     fullWidth
+                                    value={imageUrl}
+                                    onChange={(e) => {setImageUrl(e.target.value)}}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} />
                             <Grid item xs={12} sm={5} />
                             <Grid item xs={12} sm={4}>
-                                <Button variant="contained" sx={{ color: "#ff781f" }}>
+                                <Button variant="outlined" onClick={handleAdToList}>
                                     Add To List
                                 </Button>
                             </Grid>
                             <Grid item xs={12} sm={5} />
-                            <Grid item>
-                                <FormTable />
+                            <Grid className="w-full pt-5 rounded-lg">
+                                {dataDetail.length > 1 ? <FormTable dataDetail={dataDetail.slice(1)} /> : null }                                
                             </Grid>
                         </Grid>
                     </Box>

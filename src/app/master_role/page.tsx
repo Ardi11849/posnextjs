@@ -1,5 +1,5 @@
 'use client'
-import { Fragment, ReactNode, Suspense, useState } from 'react';
+import { Suspense, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { motion } from "framer-motion";
@@ -14,9 +14,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: '#bdbdbd',
         color: theme.palette.common.black,
+        padding: 5
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
+        padding: 5
     },
 }));
 
@@ -110,7 +112,9 @@ export default function HorizontalLinearStepper() {
                 <div className="rounded-lg bg-gray-200 overflow-y-auto h-[calc(100vh-6rem)]">
                     <div className="grid grid-cols-1 gap-5 px-4 py-4">
                         <motion.div
-                        // className="hover:cursor-pointer"
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5 }}
                         >
                             <Card className="rounded-lg">
                                 <Grid>
@@ -130,7 +134,7 @@ export default function HorizontalLinearStepper() {
                                                             </TableRow>
                                                             <TableRow>
                                                                 {Menus.map((row, index) => (
-                                                                    <StyledTableCell key={index} className='font-bold font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400' colSpan={row.list.length + 1}>
+                                                                    <StyledTableCell key={index} className='font-bold font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400' colSpan={row.list.length}>
                                                                         {row.labelGroup}
                                                                     </StyledTableCell>
                                                                 ))}
