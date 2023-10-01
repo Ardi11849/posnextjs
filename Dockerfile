@@ -1,11 +1,13 @@
-FROM node:18-alpine AS deps
+# Stage 1: Install dependencies
+FROM --platform=linux/amd64 node:16-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN  npm install --production
+RUN npm install --production
 
-FROM node:18-alpine AS builder
+# Stage 2: Build the application
+FROM --platform=linux/amd64 node:16-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -14,7 +16,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN npm run build
 
-FROM node:18-alpine AS runner
+# Stage 3: Final image
+FROM --platform=linux/amd64 node:16-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
