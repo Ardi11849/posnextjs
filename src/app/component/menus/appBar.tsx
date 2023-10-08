@@ -2,11 +2,12 @@
 'use client'
 import { IconSearch, IconList } from '@tabler/icons-react';
 import { useState } from "react";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import Sidebar from './sideBar';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/navigation';
 
 const show = {
     opacity: 1,
@@ -25,18 +26,14 @@ interface HeaderProps {
     url: string;
 }
 
-const itemVariants: Variants = {
-    open: {
-        opacity: 1,
-        y: 0,
-        transition: { type: "spring", stiffness: 300, damping: 24 }
-    },
-    closed: { opacity: 0, y: 20, transition: { duration: 0.2 } }
-};
-
 const Header = ({ title, url }: HeaderProps) => {
     const [isVisible, setIsVisible] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
+    const { push } = useRouter();
+
+    const logout = async () => {
+        push('/api/auth/signout');
+    }
     return (
         <>
             <header className="bg-gray-50 py-5">
@@ -96,38 +93,16 @@ const Header = ({ title, url }: HeaderProps) => {
                             <nav aria-label="main mailbox folders">
                                 <List>
                                     <ListItem disablePadding>
-                                        <ListItemButton>
+                                        <ListItemButton onClick={logout}>
                                             <ListItemIcon>
-                                                <FontAwesomeIcon icon={faGear} />
+                                                <FontAwesomeIcon icon={faRightFromBracket} />
                                             </ListItemIcon>
-                                            <ListItemText primary="Setting" />
-                                        </ListItemButton>
-                                    </ListItem>
-                                    <ListItem disablePadding>
-                                        <ListItemButton>
-                                            <ListItemIcon>
-                                                <FontAwesomeIcon icon={faGear} />
-                                            </ListItemIcon>
-                                            <ListItemText primary="Drafts" />
+                                            <ListItemText primary="Logout" />
                                         </ListItemButton>
                                     </ListItem>
                                 </List>
                             </nav>
                             <Divider />
-                            <nav aria-label="secondary mailbox folders">
-                                <List>
-                                    <ListItem disablePadding>
-                                        <ListItemButton>
-                                            <ListItemText primary="Trash" />
-                                        </ListItemButton>
-                                    </ListItem>
-                                    <ListItem disablePadding>
-                                        <ListItemButton component="a" href="#simple-list">
-                                            <ListItemText primary="Spam" />
-                                        </ListItemButton>
-                                    </ListItem>
-                                </List>
-                            </nav>
                         </motion.div>
                     </motion.nav>
                 </div>

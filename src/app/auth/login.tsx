@@ -1,46 +1,32 @@
 import { useState } from "react"
-import { apis, storeTokenInLocalStorage } from "../../global/apis"
 import { motion, LayoutGroup } from 'framer-motion';
 import Loading from "@/app/component/loading";
 import { useRouter } from 'next/navigation'
-
-
+import { signIn } from "next-auth/react";
+import { isNull } from "@/global/config/config";
 const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [message, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [showAlert, setShowAlert] = useState(false);
-	const router = useRouter()
+	const { push } = useRouter();
 
 	const handleSubmit = async () => {
 		setLoading(true);
-		const data = {
-			method: 'post',
-			url: '/auth/login',
-			data: {
-				email: email,
-				password: password
-			}
-		}
-		const result = await apis(data);
-		console.log(result);
-		if (result == undefined) {
-			const pesan = "Internal Server Error, Harap Hubungi Developer!";
-			setMessage(pesan);
-			setShowAlert(true);
-			setLoading(false);
-		} else {
-			if (result.data.code >= 200 && result.data.code <= 299) {
-				storeTokenInLocalStorage(result.data.data.accessToken)
-				router.replace('/dashboard');
-			} else {
-				const pesan = (typeof result.data.message !== 'undefined') ? result.data.message : result.data.error[0].message;
-				setMessage(pesan);
-				setShowAlert(true);
+		signIn("credentials", { email: email, password: password, redirect: false })
+			.then((result) => {
+				if (result?.ok) {
+					push('/dashboard');
+				} else {
+					const err: string | null | undefined = result?.error
+					const pesan = isNull(err) == false ? err : "Internal Server Error, Harap Hubungi Developer!";
+					// @ts-ignore
+					setMessage(pesan);
+					setShowAlert(true);
+				}
 				setLoading(false);
-			}
-		}
+			})
 	}
 
 	const show = {

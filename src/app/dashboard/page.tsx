@@ -9,6 +9,11 @@ import Typography from '@mui/material/Typography';
 import { Menus } from "../../global/menus";
 import { useRouter } from 'next/navigation';
 import Loading from '../component/loading';
+import dynamic from 'next/dynamic'
+ 
+const DynamicHeader = dynamic(() => import('../component/menus/appBar'), {
+  loading: () => <Loading />,
+})
 
 const Dashboard = () => {
     const [code, setCode] = useState('');
@@ -42,7 +47,7 @@ const Dashboard = () => {
 
     return (
         <Suspense fallback={<Loading />}>
-            <AppBar title="Dashboard" url="/" />
+            <DynamicHeader title="Dashboard" url="/" />
             <div className="px-4 h-[calc(100vh-6rem)] overflow-y-auto">
                 <div className="bg-gray-200 rounded-lg">
                     {Menus.map((row, index) => (

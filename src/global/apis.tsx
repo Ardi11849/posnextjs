@@ -30,24 +30,8 @@ export const apis = async (datas: any) => {
   })
     .then((response) => {
       return response;
-      // dispatch({
-      //   type: GET_USER,
-      //   payload: {
-      //     loading:false,
-      //     data: response,
-      //     errorMessage: false
-      //   }
-      // })
     })
     .catch((err) => {
-      return err.response;
-      // dispatch({
-      //   type: GET_USER,
-      //   payload: {
-      //     loading:false,
-      //     data: err,
-      //     errorMessage: false
-      //   }
-      // })
+      return err;
     })
 }

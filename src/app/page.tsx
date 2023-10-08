@@ -1,26 +1,27 @@
 'use client'
 
 import { useEffect } from "react";
-import { getTokenFromLocalStorage } from "@/global/apis"
 import Login from "./auth/login"
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion';
 import Footer from "./auth/footer";
+import { useSession } from "next-auth/react";
+import { isNull } from "@/global/config/config";
 
 export default function Home() {
+    const { data: session, status } = useSession();
 
     const { push } = useRouter();
 
-    const redirectIfAuthenticated = async () => {
-        const isUserAuthenticated = await getTokenFromLocalStorage();
-        if (isUserAuthenticated != null && isUserAuthenticated != 'null' && isUserAuthenticated != undefined) {
+    const redirectIfAuthenticated = async () => {        
+        if (isNull(session) == false) {
             push("/dashboard")
         }
     };
 
     useEffect(() => {
         redirectIfAuthenticated();
-    }, []);
+    }, [status]);
 
     return (
         <main>

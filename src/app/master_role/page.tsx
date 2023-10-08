@@ -5,10 +5,14 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { motion } from "framer-motion";
 import Typography from '@mui/material/Typography';
 import Loading from '../component/loading';
-import AppBar from "../component/menus/appBar";
 import { Card, CardContent, Grid, Table, TableBody, TableContainer, TableHead, TableRow, Paper, Switch, SwitchProps } from '@mui/material';
 import { Menus } from '@/global/menus';
 import './css/index.css'
+import dynamic from 'next/dynamic'
+ 
+const DynamicHeader = dynamic(() => import('../component/menus/appBar'), {
+  loading: () => <Loading />,
+})
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -107,7 +111,7 @@ export default function HorizontalLinearStepper() {
 
     return (
         <Suspense fallback={<Loading />}>
-            <AppBar title="Dashboard" url="#" />
+            <DynamicHeader title="Dashboard" url="#" />
             <div className="px-4">
                 <div className="rounded-lg bg-gray-200 overflow-y-auto h-[calc(100vh-6rem)]">
                     <div className="grid grid-cols-1 gap-5 px-4 py-4">

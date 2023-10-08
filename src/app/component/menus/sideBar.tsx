@@ -2,19 +2,30 @@
 'use client'
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useMemo } from "react";
-import { usePathname } from 'next/navigation';
 import { Menus } from '../../../global/menus';
 import { List, ListItemButton, ListItemIcon, ListItemText, Divider, ListSubheader, Collapse } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { FontAwesomeIcon } from '@/lib/fontawesome';
-import { getTokenFromLocalStorage, storeTokenInLocalStorage } from "@/global/apis"
+import { useSession } from 'next-auth/react';
+import { isNull } from '@/global/config/config';
+import Link from 'next/link';
 
 const Sidebar = () => {
-    const router = useRouter()
-
     const { push } = useRouter();
     const [open, setOpen] = useState({});
+    const { data: session, status } = useSession();
+
+    const redirectIfAuthenticated = async () => {
+        if (isNull(session) == true) {
+            push("/")
+        }
+    };
+
+    useEffect(() => {
+        redirectIfAuthenticated();
+    }, [status]);
+
     useMemo(() => {
         let datasOpen = {}
         Menus.map((row, index) => {
@@ -31,23 +42,6 @@ const Sidebar = () => {
         }));
     };
 
-    const redirectIfAuthenticated = async () => {
-        const isUserAuthenticated = await getTokenFromLocalStorage();
-        if (isUserAuthenticated == null || isUserAuthenticated == 'null' || isUserAuthenticated == undefined) {
-            push('/');
-        }
-    };
-
-    useEffect(() => {
-        redirectIfAuthenticated();
-    }, []);
-
-    const logout = async () => {
-        storeTokenInLocalStorage('null');
-        router.replace('/');
-    }
-
-    const path = usePathname();
     return (
         <nav className="menu">
             {Menus.map((row, index) => (
@@ -78,16 +72,18 @@ const Sidebar = () => {
                     >
                         {row.list.map((row2, index2) => (
                             <List key={index2} component="div" disablePadding>
-                                <ListItemButton component="a" href={row2.link}>
-                                    <ListItemIcon>
-                                        <FontAwesomeIcon
-                                            //@ts-ignore
-                                            icon={row2.icon}
-                                            size="xl"
-                                        />
-                                    </ListItemIcon>
-                                    <ListItemText secondary={row2.nama} />
-                                </ListItemButton>
+                                <Link href={row2.link}>
+                                    <ListItemButton component="button">
+                                        <ListItemIcon>
+                                            <FontAwesomeIcon
+                                                //@ts-ignore
+                                                icon={row2.icon}
+                                                size="xl"
+                                            />
+                                        </ListItemIcon>
+                                        <ListItemText secondary={row2.nama} />
+                                    </ListItemButton>
+                                </Link>
                             </List>
                         ))}
                     </Collapse>
