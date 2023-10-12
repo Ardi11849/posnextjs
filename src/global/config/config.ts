@@ -10,13 +10,53 @@ export const isNull = (string: Session | string | null | undefined) => {
     return true;
 }
 
+async function refreshAccessToken(token: any) {
+    try {
 
+    let result = await axios.post('https://api-pos-admin.digylabs.com/api/v1/auth/refresh-token')
+        .then((response) => {
+            return response.data.data;
+        }).catch((error) => {
+            console.log(`error`, error.response);
+            if (error.response.data.message) {
+                throw error.response.data;
 
+            } else {
+                throw error.response.data.error[0] || "Internal Server Error, Harap Hubungi Developer!";
+            }
+        });
+
+        const refreshedTokens = await result.json()
+
+        if (!result.ok) {
+            throw refreshedTokens
+        }
+
+        return {
+            ...token,
+            accessToken: refreshedTokens.access_token,
+            accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+            refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+        }
+    } catch (error) {
+        console.log(error)
+
+        return {
+            ...token,
+            error: "RefreshAccessTokenError",
+        }
+    }
+}
+
+interface token {
+    token: any,
+    user: any
+}
 export const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt",
     },
-    secret: 'R24GY7ydJp/ydUq0AJC8dQ==',
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         CredentialsProvider({
             type: 'credentials',
@@ -50,15 +90,21 @@ export const authOptions: NextAuthOptions = {
         signIn: '/'
     },
     callbacks: {
-        jwt: async ({ token, user }) => {
+        jwt: async ({ token, user }: token) => {
             if (user) {
-                token.user = user;
+                return {
+                  accessToken: user?.accessToken,
+                  accessTokenExpires: user?.expiredAt,
+                  data: user.user,
+                }
             }
             return token;
         },
         session: async ({ session, token }: any) => {
             if (token) {
-                session.user = token.user;
+                session.user = token.data;
+                session.accessToken = token.accessToken;
+                session.accessTokenExpires = token.accessTokenExpires;
             }
             return session;
         }

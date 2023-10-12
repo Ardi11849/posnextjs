@@ -15,7 +15,8 @@ const Sidebar = () => {
     const { push } = useRouter();
     const [open, setOpen] = useState({});
     const { data: session, status } = useSession();
-
+    console.log(session);
+    
     const redirectIfAuthenticated = async () => {
         if (isNull(session) == true) {
             push("/")

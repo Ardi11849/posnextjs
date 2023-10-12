@@ -2,7 +2,7 @@ import axios from 'axios';
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const url = 'https://api-pos-admin.digylabs.com/api/v1';
+const url = process.env.NEXT_PUBLIC_API_URL;
 
 export function storeTokenInLocalStorage(token: string) {
   const response = NextResponse.next();

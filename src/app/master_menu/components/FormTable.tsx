@@ -34,6 +34,10 @@ const FormTable = ({ dataDetail }: any) => {
     const handleClick = () => {
         setOpenMenu(!setOpenMenu);
     };
+    interface interTable {
+        row: { label_group: string; nama_menu: string; icon: string; link_module: string; image_url: string; }
+        index: Key | null | undefined
+    }
     return (
         <div className='rounded-lg'>
             <TableContainer className='pt-3 overflow-x-scroll rounded-lg relative' component={Paper}>
@@ -61,7 +65,7 @@ const FormTable = ({ dataDetail }: any) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {dataDetail.map((row: { label_group: string; nama_menu: string; icon: string; link_module: string; image_url: string; }, index: Key | null | undefined) => (
+                        {dataDetail.map(({row, index}: interTable) => (
                             <StyledTableRow key={index}>
                                 <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
                                     {row.label_group}
