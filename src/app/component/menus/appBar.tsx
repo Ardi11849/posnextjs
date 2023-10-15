@@ -8,6 +8,7 @@ import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } f
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 const show = {
     opacity: 1,
@@ -32,7 +33,7 @@ const Header = ({ title, url }: HeaderProps) => {
     const { push } = useRouter();
 
     const logout = async () => {
-        push('/api/auth/signout');
+        signOut();
     }
     return (
         <>
@@ -107,7 +108,7 @@ const Header = ({ title, url }: HeaderProps) => {
                     </motion.nav>
                 </div>
             </header>
-            <motion.div className='float-left bg-gray-50 w-[17rem] px-6 text-white h-[calc(100vh-6rem)] overflow-y-scroll' animate={isVisible ? show : hide}> <Sidebar /> </motion.div>
+            <motion.div className='float-left bg-gray-50 w-[17rem] text-white h-[calc(100vh-6rem)] overflow-y-scroll' animate={isVisible ? show : hide}> <Sidebar /> </motion.div>
         </>
     );
 };

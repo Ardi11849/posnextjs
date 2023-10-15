@@ -2,8 +2,10 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
 import Loading from './component/loading'
+import { useRouter } from 'next/navigation'
 
 export default function NotFound() {
+    const { back } = useRouter()
     return (
         <Suspense fallback={ <Loading/> }>
             <div className="min-h-screen flex flex-col justify-center items-center text-center py-20">
@@ -15,7 +17,7 @@ export default function NotFound() {
                     </div>
                 </div>
                 <div className="max-w-[300px] mx-auto w-full">
-                    <Link href="/">Return Home</Link>
+                    <button className="bg-slate-900 text-white py-3 px-6 rounded-full" onClick={back}>Kembali</button>
                 </div>
             </div>
         </Suspense>

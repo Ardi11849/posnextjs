@@ -1,21 +1,6 @@
 import axios from 'axios';
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 
 const url = process.env.NEXT_PUBLIC_API_URL;
-
-export function storeTokenInLocalStorage(token: string) {
-  const response = NextResponse.next();
-  response.cookies.set({
-      name: 'token',
-      value: token,
-  })
-  localStorage.setItem('token', token);
-}
-
-export function getTokenFromLocalStorage() {
-  return localStorage.getItem('token');
-}
 
 export const apis = async (datas: any) => { 
   return await axios({
@@ -25,7 +10,7 @@ export const apis = async (datas: any) => {
     params: datas.data,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer '+getTokenFromLocalStorage()
+      'Authorization': 'Bearer '+datas.token
     }
   })
     .then((response) => {

@@ -1,31 +1,28 @@
 // components/Sidebar.js
 'use client'
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useMemo } from "react";
 import { Menus } from '../../../global/menus';
 import { List, ListItemButton, ListItemIcon, ListItemText, Divider, ListSubheader, Collapse } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { FontAwesomeIcon } from '@/lib/fontawesome';
-import { useSession } from 'next-auth/react';
-import { isNull } from '@/global/config/config';
+import { signOut, useSession } from 'next-auth/react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 const Sidebar = () => {
     const { push } = useRouter();
+    const pathname = usePathname();
     const [open, setOpen] = useState({});
-    const { data: session, status } = useSession();
-    console.log(session);
-    
-    const redirectIfAuthenticated = async () => {
-        if (isNull(session) == true) {
-            push("/")
-        }
-    };
+    const { data: session, status } = useSession({ required: true, onUnauthenticated() { push("/") } });
 
     useEffect(() => {
-        redirectIfAuthenticated();
-    }, [status]);
+        // @ts-ignore
+        if (session?.error === "RefreshAccessTokenError") {
+            signOut(); // Force sign in to hopefully resolve error
+        }
+    }, [session]);
 
     useMemo(() => {
         let datasOpen = {}
@@ -53,7 +50,7 @@ const Sidebar = () => {
                         aria-labelledby="nested-list-subheader"
                         onClick={() => handleClick(row.id)}
                         subheader={
-                            <ListSubheader component="div" id="nested-list-subheader">
+                            <ListSubheader className='bg-transparent w-full' component="div" id="nested-list-subheader">
                                 {row.labelGroup}
                                 {
                                     // @ts-ignore
@@ -72,18 +69,20 @@ const Sidebar = () => {
                         unmountOnExit
                     >
                         {row.list.map((row2, index2) => (
-                            <List key={index2} component="div" disablePadding>
+                            <List key={index2} className={pathname == row2.link ? 'bg-blue-300' : ''} component="div" disablePadding>
                                 <Link href={row2.link}>
-                                    <ListItemButton component="button">
-                                        <ListItemIcon>
-                                            <FontAwesomeIcon
-                                                //@ts-ignore
-                                                icon={row2.icon}
-                                                size="xl"
-                                            />
-                                        </ListItemIcon>
-                                        <ListItemText secondary={row2.nama} />
-                                    </ListItemButton>
+                                    <motion.div whileHover={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
+                                        <ListItemButton className='w-full' component="button">
+                                            <ListItemIcon>
+                                                <FontAwesomeIcon
+                                                    //@ts-ignore
+                                                    icon={row2.icon}
+                                                    size="xl"
+                                                />
+                                            </ListItemIcon>
+                                            <ListItemText secondary={row2.nama} />
+                                        </ListItemButton>
+                                    </motion.div>
                                 </Link>
                             </List>
                         ))}

@@ -12,35 +12,40 @@ export const isNull = (string: Session | string | null | undefined) => {
 
 async function refreshAccessToken(token: any) {
     try {
-
-    let result = await axios.post('https://api-pos-admin.digylabs.com/api/v1/auth/refresh-token')
-        .then((response) => {
+        let result = await axios({
+            method: 'get',
+            url: 'https://api-pos-admin.digylabs.com/api/v1/auth/refresh-token',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token.accessToken
+            }
+        }).then((response) => {
             return response.data.data;
         }).catch((error) => {
             console.log(`error`, error.response);
             if (error.response.data.message) {
-                throw error.response.data;
-
+                return {
+                    ...token,
+                    message: error.response.data.message,
+                    error: "RefreshAccessTokenError",
+                }
             } else {
-                throw error.response.data.error[0] || "Internal Server Error, Harap Hubungi Developer!";
+                return {
+                    ...token,
+                    message: "Internal Server Error, Harap Hubungi Developer!",
+                    error: "RefreshAccessTokenError",
+                }
             }
         });
 
-        const refreshedTokens = await result.json()
-
-        if (!result.ok) {
-            throw refreshedTokens
-        }
-
         return {
             ...token,
-            accessToken: refreshedTokens.access_token,
-            accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
-            refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+            accessToken: result.accessToken,
+            accessTokenExpires: result.expiredAt,
+            error: result.error || '',
         }
     } catch (error) {
         console.log(error)
-
         return {
             ...token,
             error: "RefreshAccessTokenError",
@@ -55,6 +60,7 @@ interface token {
 export const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt",
+        maxAge: 60 * 60 // 4 hours
     },
     secret: process.env.NEXTAUTH_SECRET,
     providers: [
@@ -91,20 +97,30 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         jwt: async ({ token, user }: token) => {
+            /** Dari Login */
             if (user) {
                 return {
-                  accessToken: user?.accessToken,
-                  accessTokenExpires: user?.expiredAt,
-                  data: user.user,
+                    accessToken: user?.accessToken,
+                    accessTokenExpires: user?.expiredAt,
+                    error: '',
+                    data: user.user,
                 }
             }
-            return token;
+
+            /** Pengecekan Berkala Jika Token Masih Aktif Maka Return Token Sebelumnya (Lihat Srtting Di Provider.tsx) */            
+            if (Date.now() < Math.floor(new Date(token.accessTokenExpires).getTime() - 10 * 60 * 1000)) {
+                return token
+            }
+
+            /** Update Token Jika Expired */
+            return await refreshAccessToken(token)
         },
         session: async ({ session, token }: any) => {
             if (token) {
                 session.user = token.data;
                 session.accessToken = token.accessToken;
                 session.accessTokenExpires = token.accessTokenExpires;
+                session.error = token.error;
             }
             return session;
         }

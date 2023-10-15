@@ -421,6 +421,20 @@ hr {
   border-top-width: 1px;
 }
 
+.hide {
+  visibility: hidden;
+  opacity: 0;
+  display: none;
+  transition: visibility 0s linear 0.33s, opacity 0.33s linear;
+}
+
+.show{
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(2);
+  opacity: 1;
+}
+
 /**
  * Undo the `border-style: none` reset that Normalize applies to images so that
  * our `border-{width}` utilities have the expected effect.
