@@ -1,4 +1,4 @@
-import { apis } from "@/global/apis";
+import { apis } from "@/global/config/apis";
 
 export const getMerchant = async (token: string, page: number, perPage: number, search: string) => {
     const data = {
