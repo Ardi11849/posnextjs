@@ -22,19 +22,22 @@ export default function HorizontalLinearStepper() {
     const [rows, setRows] = useState([]);
     const [callData, setCallData] = useState(true);
     const { data: session, status } = useSession();
+
+    console.log(session);
     
+
     const getData = async () => {
         //@ts-ignore
-        const datas: any = { method: 'GET', url: '/master/menu/results', token: session?.accessToken };        
+        const datas: any = { method: 'GET', url: '/master/menu/results', token: session?.accessToken };
         const result = await apis(datas);
         setRows(result.data.data);
-        setCallData(false);        
+        setCallData(false);
     }
 
     useEffect(() => {
         if (isNull(session) == false && callData) getData();
-    },[session, callData]);
-    
+    }, [session, callData]);
+
     const handleClickOpen = (action: string) => {
         setIsOpen(true);
         setAction(action);
@@ -51,6 +54,7 @@ export default function HorizontalLinearStepper() {
     return (
         <Suspense fallback={<Loading />}>
             <DynamicHeader title="Dashboard" url="#" />
+            <FormModalGroup isOpen={isOpen} close={handleClickClose} action={action} />
             <CardLayouts label='Master Menu'>
                 <Stack direction="row" spacing={2} className='pb-3'>
                     <motion.div whileHover={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
@@ -59,7 +63,6 @@ export default function HorizontalLinearStepper() {
                         </Button>
                     </motion.div>
                 </Stack>
-                <FormModalGroup isOpen={isOpen} close={handleClickClose} action={action} />
                 <CollapsibleTable rows={rows} />
                 {/* <FormCard /> */}
             </CardLayouts>
