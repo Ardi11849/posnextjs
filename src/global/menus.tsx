@@ -37,7 +37,7 @@ export const Menus = [
                 'nama': 'Stock Opname',
                 'image': 'https://www.lenmarc.com/products/_lemposva/lemposva_inv.png',
                 'icon': 'box',
-                'link': '/master_customer'
+                'link': '/stock_opname'
             },
             {
                 'id': 1,
@@ -150,6 +150,13 @@ export const Menus = [
                 'image': 'https://www.wicellnetwork.vn/wp-content/uploads/2021/06/user-management.png',
                 'icon': 'users-gear',
                 'link': '/master_role'
+            },
+            {
+                'id': 1,
+                'nama': 'Master Merchant',
+                'image': 'https://www.wicellnetwork.vn/wp-content/uploads/2021/06/user-management.png',
+                'icon': 'users-gear',
+                'link': '/master_merchant'
             }
         ]
     },

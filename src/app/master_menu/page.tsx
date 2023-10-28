@@ -8,7 +8,7 @@ import { Button, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
 import FormModalGroup from './components/form/FormModalGroup';
 import { setShowHide, store } from '@/global/redux/store';
-import { apis } from '@/global/apis';
+import { apis } from '@/global/config/apis';
 import { isNull } from '@/global/config/config';
 import { useSession } from 'next-auth/react';
 

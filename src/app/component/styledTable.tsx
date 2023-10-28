@@ -1,18 +1,17 @@
-import { TableCell, TableRow, styled, tableCellClasses } from "@mui/material";
+import { TableCell, TableRow, styled, tableCellClasses, TablePagination } from "@mui/material";
 
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
-
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: '#bdbdbd',
         color: theme.palette.common.black,
         padding: 5,
-        text: 'center'
+        borderColor: 'black'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
         padding: 5,
-        text: 'center'
+        borderColor: 'black'
     },
 }));
 
@@ -22,6 +21,18 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
     // hide last border
     '&:last-child td, &:last-child th': {
-        border: 0,
     },
 }));
+
+
+export const StyledTablePaginataion = styled(TablePagination)(({ theme }) => ({
+    [`&.${tableCellClasses.footer}`]: {
+        backgroundColor: '#bdbdbd',
+        color: theme.palette.common.black,
+        padding: 0,
+        minHeight: 0,
+        text: 'center',
+        borderColor: 'black',
+        fontFamily: 'monospace',
+    },
+}))
