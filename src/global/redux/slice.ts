@@ -55,10 +55,12 @@ export const loadingSlice = createSlice({
 /** Loading Slice */
 // Define a type for the slice state
 interface showHideState {
-    isShow: boolean
+    id: string;
+    isShow: boolean;
 }
 // Define the initial state using that type
 const initialShowHideState: showHideState = {
+    id: "1",
     isShow: false
 }
 
@@ -67,6 +69,7 @@ export const showhideSlice = createSlice({
     initialState: initialShowHideState,
     reducers: {
         showhide(state, action) {
+            state.id = action.payload.id;
             state.isShow = action.payload.showhide;
         }
     }

@@ -2,7 +2,7 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useMemo } from "react";
-import { Menus } from '../../../global/menus';
+import { Menus } from '@/global/menus';
 import { List, ListItemButton, ListItemIcon, ListItemText, Divider, ListSubheader, Collapse } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
