@@ -1,18 +1,15 @@
 'use client'
 import { Suspense, useState } from 'react';
 import { styled } from '@mui/material/styles';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import { motion } from "framer-motion";
-import Typography from '@mui/material/Typography';
-import Loading from '../component/loading';
-import { Card, CardContent, Grid, Table, TableBody, TableContainer, TableHead, TableRow, Paper, Switch, SwitchProps } from '@mui/material';
+import Loading from '@/app/component/loading';
+import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, Switch, SwitchProps } from '@mui/material';
 import { Menus } from '@/global/menus';
 import './css/index.css';
 import dynamic from 'next/dynamic';
 import { StyledTableCell, StyledTableRow } from '@/app/component/styledTable';
-import CardLayouts from '../component/cardLayout';
+import CardLayouts from '@/app/component/cardLayout';
 
-const DynamicHeader = dynamic(() => import('../component/menus/appBar'), {
+const DynamicHeader = dynamic(() => import('@/app/component/menus/appBar'), {
     loading: () => <Loading />,
 })
 
