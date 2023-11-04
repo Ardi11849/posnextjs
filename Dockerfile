@@ -1,6 +1,6 @@
 # Stage 1: Install dependencies
 FROM --platform=linux/amd64 node:18-alpine AS deps
-RUN npm install -g npm@10.2.0
+RUN npm install -g npm@10.2.1
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN npm install --production
 
 # Stage 2: Build the application
 FROM --platform=linux/amd64 node:18-alpine AS builder
-RUN npm install -g npm@10.2.0
+RUN npm install -g npm@10.2.1
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -20,7 +20,7 @@ RUN npm run build
 
 # Stage 3: Final image
 FROM --platform=linux/amd64 node:18-alpine AS runner
-RUN npm install -g npm@10.2.0
+RUN npm install -g npm@10.2.1
 WORKDIR /app
 
 ENV NODE_ENV production
