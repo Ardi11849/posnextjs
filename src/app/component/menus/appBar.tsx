@@ -1,14 +1,14 @@
 // components/Header.js
 'use client'
 import { IconSearch, IconList } from '@tabler/icons-react';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Sidebar from './sideBar';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+import { saveSession, store } from '@/global/redux/store';
 
 const show = {
     opacity: 1,
@@ -30,11 +30,21 @@ interface HeaderProps {
 const Header = ({ title, url }: HeaderProps) => {
     const [isVisible, setIsVisible] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
-    const { push } = useRouter();
+    const { data: session, status } = useSession();
 
     const logout = async () => {
         signOut();
     }
+
+    useEffect(() => {
+        saveSession({
+            token: session?.accessToken,          
+            expired: session?.accessTokenExpires,
+            username: session?.user?.name,
+            email: session?.user?.email        
+        })
+    });
+    
     return (
         <>
             <header className="bg-gray-50 py-5">
@@ -47,14 +57,6 @@ const Header = ({ title, url }: HeaderProps) => {
                     ><IconList className="w-7 h-7" />
                     </motion.button>
                     <nav className="space-x-4 pl-[2rem]">
-                        <div className="relative">
-                            <input
-                                type="text"
-                                placeholder="Search"
-                                className="py-2 pl-10 pr-4 text-black border rounded-full w-full focus:outline-none focus:ring focus:border-blue-300"
-                            />
-                            <IconSearch className="text-gray-500 absolute left-3 top-1/4" />
-                        </div>
                     </nav>
                     <motion.nav
                         initial={false}

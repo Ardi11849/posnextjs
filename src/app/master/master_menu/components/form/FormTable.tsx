@@ -1,6 +1,7 @@
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, tableCellClasses } from "@mui/material"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
+import { IconTrash } from "@tabler/icons-react";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
@@ -27,26 +28,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const FormTable = ({ dataDetail }: any) => {
-    console.log(dataDetail.length);
-
-    const [openMenu, setOpenMenu] = useState(false);
-    const handleClick = () => {
-        setOpenMenu(!setOpenMenu);
-    };
-    interface interTable {
-        row: { label_group: string; nama_menu: string; icon: string; link_module: string; image_url: string; }
-        index: Key | null | undefined
-    }
+const FormTable = ({ dataDetail, deleteData }: any) => {
     return (
         <div className='rounded-lg'>
             <TableContainer className='pt-3 overflow-x-scroll rounded-lg relative' component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead className='bg-white '>
                         <TableRow>
-                            <StyledTableCell className='font-bold sticky-column font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400'>
-                                Label Group
-                            </StyledTableCell>
                             <StyledTableCell className='font-bold sticky-column font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400'>
                                 Nama Menu
                             </StyledTableCell>
@@ -57,7 +45,7 @@ const FormTable = ({ dataDetail }: any) => {
                                 Link Module
                             </StyledTableCell>
                             <StyledTableCell className='font-bold sticky-column font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400'>
-                                Image Url
+                                Image
                             </StyledTableCell>
                             <StyledTableCell className='font-bold sticky-column font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400'>
                                 Action
@@ -65,37 +53,58 @@ const FormTable = ({ dataDetail }: any) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {dataDetail.map(({row, index}: interTable) => (
-                            <StyledTableRow key={index}>
-                                <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
-                                    {row.label_group}
-                                </StyledTableCell>
-                                <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
-                                    {row.nama_menu}
-                                </StyledTableCell>
-                                <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
-                                    {row.icon}
-                                </StyledTableCell>
-                                <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
-                                    {row.link_module}
-                                </StyledTableCell>
-                                <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
-                                    {row.image_url}
-                                </StyledTableCell>
-                                <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
-                                    <IconButton
-                                        aria-label="more"
-                                        id="long-button"
-                                        aria-controls={openMenu ? 'long-menu' : undefined}
-                                        aria-expanded={openMenu ? 'true' : undefined}
-                                        aria-haspopup="true"
-                                        onClick={handleClick}
-                                    >
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                </StyledTableCell>
-                            </StyledTableRow>
-                        ))}
+                        {
+                            dataDetail.length === 0 ? (
+                                <StyledTableRow>
+                                    <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                        Tidak Ada Data
+                                    </StyledTableCell>
+                                    <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                        Tidak Ada Data
+                                    </StyledTableCell>
+                                    <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                        Tidak Ada Data
+                                    </StyledTableCell>
+                                    <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                        Tidak Ada Data
+                                    </StyledTableCell>
+                                    <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                        Tidak Ada Data
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            ) :
+                                dataDetail.map((Data: any, index: any) => (
+                                    <StyledTableRow key={index}>
+                                        <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                            {Data.nama_menu}
+                                        </StyledTableCell>
+                                        <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                            <img
+                                                src={URL.createObjectURL(Data.selectedIcon)}
+                                                alt="Thumb"
+                                            />
+                                        </StyledTableCell>
+                                        <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                            {Data.link_module}
+                                        </StyledTableCell>
+                                        <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                            <img
+                                                src={URL.createObjectURL(Data.selectedImage)}
+                                                alt="Thumb"
+                                            />
+                                        </StyledTableCell>
+                                        <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                            <IconButton
+                                                aria-label="more"
+                                                id="long-button"
+                                                aria-haspopup="true"
+                                                onClick={deleteData}
+                                            >
+                                                <IconTrash />
+                                            </IconButton>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                ))}
                     </TableBody>
                 </Table>
             </TableContainer>

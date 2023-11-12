@@ -20,6 +20,8 @@ async function refreshAccessToken(token: any) {
                 'Authorization': 'Bearer ' + token.accessToken
             }
         }).then((response) => {
+            console.log(response);
+            
             return response.data.data;
         }).catch((error) => {
             console.log(`error`, error.response);
@@ -126,3 +128,20 @@ export const authOptions: NextAuthOptions = {
         }
     }
 }
+
+// Convert a file to base64 string
+export const toBase64 = (file: File) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+  
+      fileReader.readAsDataURL(file);
+  
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+  
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };

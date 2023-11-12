@@ -1,11 +1,22 @@
 import { apis } from "@/global/config/apis";
 
-export const getMasterMenu = async (token: string, page: number, perPage: number, search: string) => {
+
+interface getMenu {
+    merchant_id: string,
+    id: string | null | undefined,
+    search: string | null,
+    page: string | null,
+    perPage: string | null,
+    sort: string | null
+}
+export const getMasterMenu = async ({merchant_id, id, search, page, perPage, sort}: getMenu) => {
     const data = {
         method: 'get',
         url: '/master/menu/results',
-        token: token,
         data: {
+            merchant_id: merchant_id,
+            id: id,
+            sort: sort,
             page: page,
             perpage: perPage,
             name: search,
@@ -16,17 +27,15 @@ export const getMasterMenu = async (token: string, page: number, perPage: number
 }
 
 interface getMenuRelation {
-    token: string,
     merchant_id: string,
     id: string | null,
     search: string | null,
     sort: string | null
 }
-export const getMasterMenuRelation = async ({token, merchant_id, id, search, sort}: getMenuRelation) => {
+export const getMasterMenuRelation = async ({merchant_id, id, search, sort}: getMenuRelation) => {
     const data = {
         method: 'get',
         url: '/master/menu/results-relation',
-        token: token,
         data: {
             merchant_id: merchant_id,
             id: id,
@@ -38,11 +47,30 @@ export const getMasterMenuRelation = async ({token, merchant_id, id, search, sor
     return result;
 }
 
-export const createMasterMenu = async (token: string, data: object) => {
+export const createMasterMenu = async (data: object) => {
     const datas = {
         method: 'post',
         url: '/master/menu/create',
-        token: token,
+        data: data,
+    }
+    const result = await apis(datas)
+    return result
+}
+
+export const updateMasterMenu = async (data: object) => {
+    const datas = {
+        method: 'put',
+        url: '/master/menu/update',
+        data: data,
+    }
+    const result = await apis(datas)
+    return result
+}
+
+export const deleteMasterMenu = async (data: object) => {
+    const datas = {
+        method: 'delete',
+        url: '/master/menu/delete',
         data: data,
     }
     const result = await apis(datas)

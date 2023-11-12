@@ -57,7 +57,7 @@ function RowGroup({ row }: InterfaceRow) {
                             sx={{ height: '50px', width: '50px' }}
                             image={row.image}
                             alt="Live from space album cover" />
-                        : 'Image Has Not Set'
+                        : 'Gambar Belum Di Set'
                     }
                 </StyledTableCell>
                 <StyledTableCell>
@@ -67,11 +67,11 @@ function RowGroup({ row }: InterfaceRow) {
                             sx={{ height: '50px', width: '50px' }}
                             image={row.image}
                             alt="Live from space album cover" />
-                        : 'Icon Has Not Set'
+                        : 'Icon Belum Di Set'
                     }
                 </StyledTableCell>
                 <StyledTableCell>
-                    {(row.active) ? 'Active' : 'Not Active'}
+                    {(row.active) ? 'Aktif' : 'Tidak Aktif'}
                 </StyledTableCell>
                 <StyledTableCell width="10%">
                     <div className="relative inline-block text-left">

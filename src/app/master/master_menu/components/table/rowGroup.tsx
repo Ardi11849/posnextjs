@@ -8,6 +8,7 @@ import { IconArrowBigDownFilled, IconArrowBigUpFilled, IconPencil, IconTrash } f
 
 interface InterfaceRow {
     row: {
+        id: string;
         label_group: string;
         merchant_name: string;
         active: boolean;
@@ -30,9 +31,10 @@ interface InterfaceRow {
     showFromFunction: any;
     showFromMenu: any;
     showTable: any;
+    handleClickOpen: any;
 };
 
-function RowGroup({ row, number, showFromFunction, showFromMenu, showTable }: InterfaceRow) {
+function RowGroup({ row, number, showFromFunction, showFromMenu, showTable, handleClickOpen }: InterfaceRow) {
     const [open, setOpen] = useState(false);
     const [openAction, setOpenAction] = useState(false);
 
@@ -40,8 +42,9 @@ function RowGroup({ row, number, showFromFunction, showFromMenu, showTable }: In
         setOpenAction(!openAction);
     };
 
-    const handleClickUpdate = (event: { currentTarget: any; }) => {
+    const handleClickFrom = (action: string, uuid: string | null | undefined) => {
         setOpenAction(!openAction);
+        handleClickOpen(action, uuid);
     };
 
     return (
@@ -63,7 +66,7 @@ function RowGroup({ row, number, showFromFunction, showFromMenu, showTable }: In
                     {row.label_group}
                 </StyledTableCell>
                 <StyledTableCell>
-                    {(row.active) ? 'Active' : 'Not Active'}
+                    {(row.active) ? 'Aktif' : 'Tidak Aktif'}
                 </StyledTableCell>
                 <StyledTableCell width="10%">
                     <div className="relative inline-block text-left">
@@ -79,28 +82,28 @@ function RowGroup({ row, number, showFromFunction, showFromMenu, showTable }: In
                                 {openAction ? <IconArrowBigUpFilled /> : <IconArrowBigDownFilled />}
                             </IconButton>
                         </div>
-                    </div>
-                    {openAction && (
-                        <div
-                            className={`absolute float-right z-10 focus:outline-none right-8 w-56 mt-2 origin-top-right "${openAction ? "rounded-md bg-white ring-opacity-5 shadow-lg ring-1 ring-black transition ease-in duration-75 transform opacity-100 scale-100" : "transition ease-out duration-100 transform opacity-0 scale-95"}"`}
-                            role="menu"
-                            aria-orientation="vertical"
-                            aria-labelledby="menu-button"
-                            tabIndex={-1}
-                        >
-                            <div className="py-1" role="none">
-                                <button onClick={handleClickUpdate} className="text-gray-700 w-full text-left block px-4 py-2 text-sm align-middle" role="menuitem" tabIndex={-1} id="menu-item-0"><IconPencil className="float-left mr-2" /> Update</button>
-                                <Divider />
-                                <button className="text-gray-700 w-full text-left block px-4 py-2 text-sm" role="menuitem" tabIndex={-1} id="menu-item-1"><IconTrash className="float-left mr-2" /> Delete</button>
+                        {openAction && (
+                            <div
+                                className={`absolute float-right z-10 focus:outline-none right-2 w-56 mt-2 origin-top-right "${openAction ? "rounded-md bg-white ring-opacity-5 shadow-lg ring-1 ring-black transition ease-in duration-75 transform opacity-100 scale-100" : "transition ease-out duration-100 transform opacity-0 scale-95"}"`}
+                                role="menu"
+                                aria-orientation="vertical"
+                                aria-labelledby="menu-button"
+                                tabIndex={-1}
+                            >
+                                <div className="py-1" role="none">
+                                    <button onClick={() => handleClickFrom('update', row.id)} className="text-gray-700 w-full text-left block px-4 py-2 text-sm align-middle" role="menuitem" tabIndex={-1} id="menu-item-0"><IconPencil className="float-left mr-2" /> Update</button>
+                                    <Divider />
+                                    <button onClick={() => handleClickFrom('delete', row.id)} className="text-gray-700 w-full text-left block px-4 py-2 text-sm" role="menuitem" tabIndex={-1} id="menu-item-1"><IconTrash className="float-left mr-2" /> Delete</button>
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </StyledTableCell>
             </StyledTableRow >
             <StyledTableRow>
                 <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <StructureMenu list_detail={row.list_detail} showFromFunction={showFromFunction} showFromMenu={showFromMenu} showTable={showTable} />
+                        <StructureMenu id={row.id} list_detail={row.list_detail} showFromFunction={showFromFunction} showFromMenu={showFromMenu} showTable={showTable} />
                     </Collapse>
                 </StyledTableCell>
             </StyledTableRow>
@@ -108,4 +111,4 @@ function RowGroup({ row, number, showFromFunction, showFromMenu, showTable }: In
     );
 }
 
-export default RowGroup;
+export default RowGroup

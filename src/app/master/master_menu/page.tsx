@@ -4,15 +4,12 @@ import Loading from '@/app/component/loading';
 import dynamic from 'next/dynamic'
 import StructureGroup from './components/table/stuctureGroup';
 import CardLayouts from '@/app/component/cardLayout';
-import { Button, Grid, InputLabel, Stack } from '@mui/material';
-import { motion } from 'framer-motion';
+import { Grid, InputLabel } from '@mui/material';
 import FormModalGroup from './components/form/FormModalGroup';
 import { setShowHide, store } from '@/global/redux/store';
 import FormCard from './components/form/FormCard';
 import Select from 'react-select';
 import { getMerchant, getMerchantById } from '@/app/master/master_merchant/middleware/apis';
-import { isNull } from '@/global/config/config';
-import { useSession } from 'next-auth/react';
 
 const DynamicHeader = dynamic(() => import('@/app/component/menus/appBar'), {
     loading: () => <Loading />,
@@ -29,18 +26,12 @@ export default function PageMasterMenu() {
     const [loading, setLoading] = useState(false);
     const [panggil, setPanggil] = useState(true);
     const [merchant_id, setMerchant_id] = useState('');
-    const { data: session, status } = useSession();
+    const [refresh, setRefresh] = useState(false);
+    const [uuid, setUuid] = useState<string | null | undefined>();
     const [merchant, setMerchant] = useState([{
         value: '',
         label: 'Pilih Merchant'
     }]);
-
-    useEffect(() => {
-        if (isNull(session) == false && panggil == true) {
-            fetchMerchant('null')
-            setPanggil(false);
-        }
-    }, [session])
 
     useEffect(() => {
         const delay = setTimeout(() => {
@@ -57,20 +48,16 @@ export default function PageMasterMenu() {
         let response = [];
         if (id != 'null' && id != undefined) {
             const datas = {
-                //@ts-ignore
-                token: session?.accessToken,
                 merchant_id: id
             }
             response = await getMerchantById(datas);
         } else {
             const datas = {
-                //@ts-ignore
-                token: session?.accessToken,
-                sort: null,
                 page: 1,
                 perPage: 100,
                 search: search,
-                id: null
+                id: null,
+                sort: null
             }
             response = await getMerchant(datas);
         }
@@ -104,12 +91,14 @@ export default function PageMasterMenu() {
         }
 
         setLoading(false);
+        setPanggil(false);
     };
 
-    const handleClickOpen = (action: string) => {
+    const handleClickOpen = (action: string, uuid: string | null | undefined) => {
         setIsOpen(true);
         setAction(action);
         setShowHide(true);
+        setUuid(uuid);
     };
 
     const handleClickClose = () => {
@@ -117,6 +106,7 @@ export default function PageMasterMenu() {
         setShowHide(false);
         setAction('');
         setPanggil(false);
+        setRefresh(!refresh);
     }
 
     const showTable = () => {
@@ -125,10 +115,12 @@ export default function PageMasterMenu() {
         setShowHideFormFunction(false);
     }
 
-    const showFromMenu = () => {
+    const showFromMenu = (action: string, uuid: string | null | undefined) => {
         setShowHideTable(false);
         setShowHideFormMenu(true);
         setShowHideFormFunction(false);
+        setAction(action);
+        setUuid(uuid);
     }
 
     const showFromFunction = () => {
@@ -148,8 +140,7 @@ export default function PageMasterMenu() {
                         close={handleClickClose}
                         action={action}
                         merchant_id={merchant_id}
-                        /** @ts-ignore */
-                        accessToken={session?.accessToken}
+                        uuid={uuid}
                     />
                     <CardLayouts label='Master Menu'>
                         <Grid container spacing={3}>
@@ -184,21 +175,12 @@ export default function PageMasterMenu() {
                                     onChange={(e: any) => {
                                         setMerchant_id(e.value)
                                     }}
-                                // onInputChange={(inputValue: SetStateAction<string>) => { setSearch(inputValue), setLoading(true) }}
+                                    onInputChange={(inputValue) => { setSearch(inputValue), setLoading(true) }}
                                 />
                             </Grid>
                         </Grid>
                         {merchant_id != '' ?
-                            <>
-                                <Stack direction="row" spacing={2} className='pb-3'>
-                                    <motion.div whileHover={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
-                                        <Button className='bg-blue-600 text-white' variant="contained" onClick={() => handleClickOpen('add')}>
-                                            Add New
-                                        </Button>
-                                    </motion.div>
-                                </Stack>
-                                <StructureGroup showTable={showTable} showFromMenu={showFromMenu} showFromFunction={showFromFunction} merchant_id={merchant_id} />
-                            </>
+                            <StructureGroup refresh={refresh} merchant_id={merchant_id} handleClickOpen={handleClickOpen} showTable={showTable} showFromMenu={showFromMenu} showFromFunction={showFromFunction} />
                             : <div className='text-center text-red-500 font-bold text-lg py-5'>Select Merchant First</div>
                         }
                     </CardLayouts>
@@ -207,7 +189,7 @@ export default function PageMasterMenu() {
             }
             {showHideFormMenu &&
                 <CardLayouts label='Add Menu'>
-                    <FormCard showTable={showTable} showFromMenu={showFromMenu} showFromFunction={showFromFunction} />
+                    <FormCard showTable={showTable} showFromMenu={showFromMenu} showFromFunction={showFromFunction} uuid={uuid} action={action} merchant_id={merchant_id} />
                 </CardLayouts>
             }
         </Suspense>

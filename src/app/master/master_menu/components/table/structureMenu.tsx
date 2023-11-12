@@ -7,6 +7,7 @@ import { isNull } from "@/global/config/config";
 
 
 interface InterfaceRow {
+    id?: string;
     list_detail?: {
         id?: string;
         name?: string;
@@ -26,7 +27,7 @@ interface InterfaceRow {
     showTable?: any;
 };
 
-function StructureMenu({ list_detail, showFromFunction, showFromMenu, showTable }: InterfaceRow) {
+function StructureMenu({ id, list_detail, showFromFunction, showFromMenu, showTable }: InterfaceRow) {
     const [open, setOpen] = useState(false);
     const [openAction, setOpenAction] = useState(false);
 
@@ -56,7 +57,7 @@ function StructureMenu({ list_detail, showFromFunction, showFromMenu, showTable 
             </Typography>
             <Stack direction="row" spacing={2} className='pb-3'>
                 <motion.div whileHover={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
-                    <Button className='bg-blue-600 text-white' variant="contained" onClick={showFromMenu}>
+                    <Button className='bg-blue-600 text-white' variant="contained" onClick={() => showFromMenu('add', id)}>
                         Add New
                     </Button>
                 </motion.div>
