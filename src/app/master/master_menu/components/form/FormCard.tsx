@@ -1,9 +1,9 @@
-import { Box, Button, Card, CardContent, Divider, Grid, InputLabel, TextField, Typography, styled } from "@mui/material"
+import { Box, Button, Divider, FormControlLabel, Grid, InputLabel, Switch, TextField, Typography, styled } from "@mui/material"
 import FormTable from "./FormTable"
 import { useEffect, useState } from "react"
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { IconArrowBadgeLeft } from "@tabler/icons-react";
-import { getMasterMenu } from "../../middleware/apis";
+import { createMasterMenuDetail, getMasterMenu, getMasterMenuDetail, updateMasterMenuDetail } from "../../middleware/apis";
 import { toBase64 } from "@/global/config/config";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 
@@ -19,7 +19,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-const FormCard = ({ uuid, action, showTable, showFromFunction, showFromMenu, merchant_id }: any) => {
+export const CreateFormMenu = ({ groupId, action, showTable, merchantId }: any) => {
     const [dataDetail, setDataDetail] = useState([{}]);
     const [labelGroup, setLabelGroup] = useState('');
     const [namaMenu, setNamaMenu] = useState('');
@@ -36,13 +36,14 @@ const FormCard = ({ uuid, action, showTable, showFromFunction, showFromMenu, mer
 
     const getMenu = async () => {
         const result = await getMasterMenu({
-            merchant_id: merchant_id,
-            id: uuid,
+            merchant_id: merchantId,
+            id: groupId,
             search: '',
             page: '1',
             perPage: '10',
             sort: ''
         })
+        console.log(groupId);
 
         if (result.data.code >= 200 && result.data.code < 300) {
             setLabelGroup(result.data.data[0].name);
@@ -54,10 +55,10 @@ const FormCard = ({ uuid, action, showTable, showFromFunction, showFromMenu, mer
         if (e.target.files && e.target.files.length > 0) {
             const base64: any = await toBase64(e.target.files[0]);
             if (from === 'image') {
-                setImage(base64);
+                setImage(base64.replace(/^data:image\/[a-z]+;base64,/, ""));
                 setSelectedImage(e.target.files[0]);
             } else if (from === 'icon') {
-                setIcon(base64);
+                setIcon(base64.replace(/^data:image\/[a-z]+;base64,/, ""));
                 setSelectedIcon(e.target.files[0]);
             }
         }
@@ -68,10 +69,13 @@ const FormCard = ({ uuid, action, showTable, showFromFunction, showFromMenu, mer
             setDataDetail((prevData) => [
                 ...prevData,
                 {
-                    nama_menu: namaMenu,
+                    menu_id: groupId,
+                    merchant_id: merchantId,
+                    active: true,
+                    name: namaMenu,
                     icon: icon,
                     selectedIcon: selectedIcon,
-                    link_module: linkModule,
+                    link: linkModule,
                     image: image,
                     selectedImage: selectedImage
                 }
@@ -102,6 +106,20 @@ const FormCard = ({ uuid, action, showTable, showFromFunction, showFromMenu, mer
             newData.splice(index, 1);
             return newData;
         });
+    }
+
+    const saveData = () => {
+        createMasterMenuDetail(dataDetail.slice(1)).then((result) => {
+            if (result.status >= 200 && result.status < 300) {
+                showTable();
+            } else {
+                console.log(result.data)
+
+                alert(result.data.error[0].message);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
     }
     return (
         <>
@@ -255,7 +273,7 @@ const FormCard = ({ uuid, action, showTable, showFromFunction, showFromMenu, mer
                         </button>
                     </Grid>
                     <Grid item xs={12} sm={7} >
-                        <button onClick={showTable} disabled={dataDetail.length < 2 ? true : false} className="disabled:opacity-75 disabled:cursor-no-drop bg-blue-500 hover:bg-blue-700 text-white float-right font-bold py-2 px-4 rounded-full">
+                        <button onClick={saveData} disabled={dataDetail.length < 2 ? true : false} className="disabled:opacity-75 disabled:cursor-no-drop bg-blue-500 hover:bg-blue-700 text-white float-right font-bold py-2 px-4 rounded-full">
                             <IconDeviceFloppy className="float-left mr-2" /> Simpan
                         </button>
                     </Grid>
@@ -265,4 +283,220 @@ const FormCard = ({ uuid, action, showTable, showFromFunction, showFromMenu, mer
     )
 }
 
-export default FormCard
+export const UpdateFormMenu = ({ menuId, action, showTable }: any) => {
+    const [id, setId] = useState('');
+    const [merchantId, setMerchantId] = useState('');
+    const [groupId, setGroupId] = useState('');
+    const [groupName, setGroupName] = useState('');
+    const [menuName, setMenuName] = useState('');
+    const [linkModule, setLinkModule] = useState('');
+    const [icon, setIcon] = useState('');
+    const [image, setImage] = useState('');
+    const [active, setActive] = useState(true);
+
+
+    useEffect(() => {
+        fetchMenu();
+    }, [menuId]);
+
+    const fetchMenu = async () => {
+        const data = {
+            id: menuId
+        }
+        const response = await getMasterMenuDetail(data);
+        console.log(response);
+        
+        setId(response.data.data[0].id);
+        setMerchantId(response.data.data[0].merchant_id);
+        setGroupId(response.data.data[0].menu_id);
+        setGroupName(response.data.data[0].menu_name);
+        setMenuName(response.data.data[0].name);
+        setLinkModule(response.data.data[0].link);
+        setIcon(response.data.data[0].icon);
+        setImage(response.data.data[0].image);
+        setActive(response.data.data[0].active);
+    }
+
+    const saveData = async () => {
+        const data = {
+            id: id,
+            merchant_id: merchantId,
+            menu_id: groupId,
+            name: menuName,
+            link: linkModule,
+            icon: icon,
+            image: image,
+            active: active
+        }
+        const response = await updateMasterMenuDetail(data);
+        if (response.status >= 200 && response.status <= 299) {
+            showTable();
+        } else {
+            console.log(response);
+        }
+    }
+
+    return (
+        <>
+            <Box sx={{ paddingLeft: 5, paddingRight: 5 }}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={2}>
+                        <InputLabel
+                            sx={{
+                                display: "flex",
+                                justifyContent: "left",
+                                fontWeight: 700
+                            }}
+                        >
+                            Label Group
+                        </InputLabel>
+                    </Grid>
+                    <Grid item xs={12} sm={10}>
+                        <Typography gutterBottom sx={{ paddingBottom: 5 }}>
+                            {groupName}
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Box>
+            <Divider />
+            <Box sx={{ paddingLeft: 5, paddingRight: 5, paddingTop: 3 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={2}>
+                        <InputLabel
+                            sx={{
+                                display: "flex",
+                                justifyContent: "left",
+                                fontWeight: 700
+                            }}
+                        >
+                            Menu
+                        </InputLabel>
+                    </Grid>
+                    <Grid item xs={12} sm={10}>
+                        <TextField
+                            required
+                            id="menu"
+                            name="menu"
+                            label="Menu"
+                            multiline
+                            fullWidth
+                            size="small"
+                            autoComplete="off"
+                            value={menuName}
+                            onChange={(e) => setMenuName(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                        <InputLabel
+                            sx={{
+                                display: "flex",
+                                justifyContent: "left",
+                                fontWeight: 700
+                            }}
+                        >
+                            Link Module
+                        </InputLabel>
+                    </Grid>
+                    <Grid item xs={12} sm={10}>
+                        <TextField
+                            required
+                            id="link"
+                            name="link"
+                            label="Link Module"
+                            multiline
+                            fullWidth
+                            size="small"
+                            autoComplete="off"
+                            value={linkModule}
+                            onChange={(e) => setLinkModule(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                        <InputLabel
+                            sx={{
+                                display: "flex",
+                                justifyContent: "left",
+                                fontWeight: 700
+                            }}
+                        >
+                            Icon
+                        </InputLabel>
+                    </Grid>
+                    <Grid item xs={12} sm={10}>
+                        <TextField
+                            required
+                            id="icon"
+                            name="icon"
+                            label="Icon"
+                            multiline
+                            fullWidth
+                            size="small"
+                            autoComplete="off"
+                            value={icon}
+                            onChange={(e) => setIcon(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                        <InputLabel
+                            sx={{
+                                display: "flex",
+                                justifyContent: "left",
+                                fontWeight: 700
+                            }}
+                        >
+                            Image
+                        </InputLabel>
+                    </Grid>
+                    <Grid item xs={12} sm={10}>
+                        <TextField
+                            required
+                            id="image"
+                            name="image"
+                            label="Image"
+                            multiline
+                            fullWidth
+                            size="small"
+                            autoComplete="off"
+                            value={image}
+                            onChange={(e) => setImage(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                        <InputLabel
+                            sx={{                                
+                                display: "flex",
+                                justifyContent: "left",
+                                fontWeight: 700
+                            }}
+                        >
+                            Active
+                        </InputLabel>
+                    </Grid>
+                    <Grid item xs={12} sm={10}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={active}
+                                    onChange={(e) => setActive(e.target.checked)}
+                                    name="active"
+                                    color="primary"
+                                />
+                            }
+                            label="Active"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={5} >
+                        <button onClick={showTable} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full">
+                            <IconArrowBadgeLeft className="float-left mr-2" /> Back
+                        </button>
+                    </Grid>
+                    <Grid item xs={12} sm={7} >
+                        <button onClick={saveData} className="float-right bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                            <IconDeviceFloppy className="float-left mr-2" /> Save
+                        </button>
+                    </Grid>
+                </Grid>
+            </Box >
+        </>
+    )
+}

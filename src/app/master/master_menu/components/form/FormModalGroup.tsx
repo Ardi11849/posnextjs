@@ -11,16 +11,16 @@ interface modalProps {
     isOpen: any;
     close: any;
     action: string;
-    merchant_id: string;
-    uuid: string | null | undefined;
+    merchantId: string;
+    groupId: string | null | undefined;
 }
 
-const FormModalGroup = ({ isOpen, close, action, merchant_id, uuid }: modalProps) => {
+const FormModalGroup = ({ isOpen, close, action, merchantId, groupId }: modalProps) => {
     const [formData, setFormData] = useState({
-        id: uuid,
+        id: groupId,
         name: '',
         active: true,
-        merchant_id: merchant_id
+        merchant_id: merchantId
     });
 
     useEffect(() => {
@@ -31,8 +31,8 @@ const FormModalGroup = ({ isOpen, close, action, merchant_id, uuid }: modalProps
 
     const getMenu = async () => {
         const result = await getMasterMenu({
-            merchant_id: merchant_id,
-            id: uuid,
+            merchant_id: merchantId,
+            id: groupId,
             search: '',
             page: '1',
             perPage: '10',
@@ -41,10 +41,10 @@ const FormModalGroup = ({ isOpen, close, action, merchant_id, uuid }: modalProps
 
         if (result.data.code >= 200 && result.data.code < 300) {
             setFormData({
-                id: uuid,
+                id: groupId,
                 name: result.data.data[0].name,
                 active: result.data.data[0].active,
-                merchant_id: merchant_id
+                merchant_id: merchantId
             });
         }
     }
@@ -63,7 +63,8 @@ const FormModalGroup = ({ isOpen, close, action, merchant_id, uuid }: modalProps
                 }
             }
         };
-
+        console.log(formData);
+        
         if (action == 'add') {
             result = await createMasterMenu(formData);
         } else if (action == 'update') {
@@ -74,10 +75,10 @@ const FormModalGroup = ({ isOpen, close, action, merchant_id, uuid }: modalProps
 
         if (result.data.code >= 200 && result.data.code < 300) {
             setFormData({
-                id: uuid,
+                id: groupId,
                 name: '',
                 active: true,
-                merchant_id: merchant_id
+                merchant_id: merchantId
             });
             close()
         } else {
@@ -91,10 +92,10 @@ const FormModalGroup = ({ isOpen, close, action, merchant_id, uuid }: modalProps
 
     const handleClose = () => {
         setFormData({
-            id: uuid,
+            id: groupId,
             name: '',
             active: true,
-            merchant_id: merchant_id
+            merchant_id: merchantId
         });
         close()
     }
@@ -112,7 +113,7 @@ const FormModalGroup = ({ isOpen, close, action, merchant_id, uuid }: modalProps
                             <label className="block pt-2">
                                 <span className="block text-sm font-medium text-slate-700">Nama</span>
                                 {action == 'update' || action == 'delete' ? (
-                                    <input type="hidden" name="id" value={uuid ? uuid : ''} />
+                                    <input type="hidden" name="id" value={groupId ? groupId : ''} />
                                 ) : ''}
                                 {
                                     action == 'delete' ? (
@@ -122,17 +123,19 @@ const FormModalGroup = ({ isOpen, close, action, merchant_id, uuid }: modalProps
                                         <input type="text" id='nama' name='nama' value={formData.name} onChange={(e) => { setFormData({ ...formData, name: e.target.value }) }} className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm" />
                                 }
                             </label>
-                            <label className="block pt-5">
-                                <span className="block text-sm font-medium text-slate-700">Status Aktif</span>
-                                <RadioGroup
-                                    row
-                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                    name="row-radio-buttons-group"
-                                >
-                                    <FormControlLabel onClick={() => setFormData({ ...formData, active: true })} control={<Radio />} label="Aktif" checked={formData.active === true}/>
-                                    <FormControlLabel onClick={() => setFormData({ ...formData, active: false })} control={<Radio />} label="Tidak Aktif" checked={formData.active === false} />
-                                </RadioGroup>
-                            </label>
+                            {action != 'delete' ? (
+                                <label className="block pt-5">
+                                    <span className="block text-sm font-medium text-slate-700">Status Aktif</span>
+                                    <RadioGroup
+                                        row
+                                        aria-labelledby="demo-row-radio-buttons-group-label"
+                                        name="row-radio-buttons-group"
+                                    >
+                                        <FormControlLabel onClick={() => setFormData({ ...formData, active: true })} control={<Radio />} label="Aktif" checked={formData.active === true} />
+                                        <FormControlLabel onClick={() => setFormData({ ...formData, active: false })} control={<Radio />} label="Tidak Aktif" checked={formData.active === false} />
+                                    </RadioGroup>
+                                </label>
+                            ) : ''}
                         </form>
                     </div>
                     <div className="col py-3">

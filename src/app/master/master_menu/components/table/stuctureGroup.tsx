@@ -13,7 +13,7 @@ import { IconSearch } from '@tabler/icons-react';
 import { Button, Grid, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
 
-export default function StructureGroup({ refresh, handleClickOpen, showFromMenu, showFromFunction, showTable, merchant_id }: any) {
+export default function StructureGroup({ refresh, handleClickOpen, showFormMenu, showFormFunction, showTable, merchantId }: any) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rows, setRows] = useState([]);
@@ -24,15 +24,14 @@ export default function StructureGroup({ refresh, handleClickOpen, showFromMenu,
 
     const getData = async () => {
         const datas: any = {
-            merchant_id: merchant_id,
+            merchant_id: merchantId,
             id: null,
             search: searchTabel,
             sort: sort
         }
 
         const result = await getMasterMenuRelation(datas);
-        console.log(result.status);
-        console.log(result.status >= 200 && result.status < 300);
+        console.log(result);
         
         if (result.status >= 200 && result.status < 300) {
             setRows(result.data.data);
@@ -43,8 +42,8 @@ export default function StructureGroup({ refresh, handleClickOpen, showFromMenu,
     }
 
     useEffect(() => {
-        if (isNull(session) == false && isNull(merchant_id) == false) getData();
-    }, [merchant_id, searchTabel, refresh]);
+        if (isNull(session) == false && isNull(merchantId) == false) getData();
+    }, [merchantId, searchTabel, refresh]);
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -89,7 +88,7 @@ export default function StructureGroup({ refresh, handleClickOpen, showFromMenu,
                 <Grid item xs={12} sm={9}>
                     <Stack direction="row" spacing={2} className='pb-3'>
                         <motion.div whileHover={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
-                            <Button className='bg-blue-600 text-white' variant="contained" onClick={() => handleClickOpen('add')}>
+                            <Button className='bg-blue-600 text-white' variant="contained" onClick={() => handleClickOpen('create')}>
                                 Add New
                             </Button>
                         </motion.div>
@@ -121,7 +120,7 @@ export default function StructureGroup({ refresh, handleClickOpen, showFromMenu,
                     </TableHead>
                     <TableBody>
                         {rows.length > 0 ? rows.map((row: rowInterface, i: number) => (
-                            <RowGroup key={i} row={row} number={(i + 1)} showFromMenu={showFromMenu} showFromFunction={showFromFunction} showTable={showTable} handleClickOpen={handleClickOpen} />
+                            <RowGroup key={i} row={row} number={(i + 1)} showFormMenu={showFormMenu} showFormFunction={showFormFunction} showTable={showTable} handleClickOpen={handleClickOpen} />
                         )) :
                             <StyledTableRow>
                                 <StyledTableCell colSpan={6} sx={{ textAlign: 'center' }}>{message}</StyledTableCell>

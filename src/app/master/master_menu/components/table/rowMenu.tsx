@@ -6,6 +6,7 @@ import { useState } from "react";
 import StrucureFunction from "./structureFunction";
 import { IconArrowBigDownFilled, IconArrowBigUpFilled, IconPencil, IconTrash } from "@tabler/icons-react";
 import { isNull } from "@/global/config/config";
+import { deleteMasterMenuDetail } from "../../middleware/apis";
 
 interface InterfaceRow {
     row: {
@@ -22,9 +23,12 @@ interface InterfaceRow {
             active: boolean;
         }[];
     };
+    showFromFunction: any;
+    showFormMenu: any;
+    showTable: any;
 };
 
-function RowGroup({ row }: InterfaceRow) {
+function RowGroup({ row, showFromFunction, showFormMenu, showTable }: InterfaceRow) {
     const [open, setOpen] = useState(false);
     const [openAction, setOpenAction] = useState(false);
 
@@ -33,8 +37,12 @@ function RowGroup({ row }: InterfaceRow) {
     };
 
     const handleClickUpdate = (event: { currentTarget: any; }) => {
-        setOpenAction(!openAction);
+        showFormMenu('update', row.id, row.id);
     };
+    
+    const handleClickDelete = (event: { currentTarget: any; }) => {
+        deleteMasterMenuDetail({id: row.id});
+    }
 
     return (
         <>
@@ -87,30 +95,29 @@ function RowGroup({ row }: InterfaceRow) {
                                 {openAction ? <IconArrowBigUpFilled /> : <IconArrowBigDownFilled />}
                             </IconButton>
                         </div>
-                    </div>
-                    {openAction && (
-                        <div
-                            className={`absolute float-right z-10 focus:outline-none right-8 w-56 mt-2 origin-top-right "${openAction ? "rounded-md bg-white ring-opacity-5 shadow-lg ring-1 ring-black transition ease-in duration-75 transform opacity-100 scale-100" : "transition ease-out duration-100 transform opacity-0 scale-95"}"`}
-                            role="menu"
-                            aria-orientation="vertical"
-                            aria-labelledby="menu-button"
-                            tabIndex={-1}
-                        >
-                            <div className="py-1" role="none">
-                                <button className="text-gray-700 w-full text-left block px-4 py-2 text-sm align-middle" role="menuitem" tabIndex={-1} id="menu-item-0"><IconPencil className="float-left mr-2" /> Update</button>
-                                <Divider />
-                                <button className="text-gray-700 w-full text-left block px-4 py-2 text-sm" role="menuitem" tabIndex={-1} id="menu-item-1"><IconTrash className="float-left mr-2" /> Delete</button>
+                        {openAction && (
+                            <div
+                                className={`absolute float-right z-10 focus:outline-none right-8 w-56 mt-2 origin-top-right "${openAction ? "rounded-md bg-white ring-opacity-5 shadow-lg ring-1 ring-black transition ease-in duration-75 transform opacity-100 scale-100" : "transition ease-out duration-100 transform opacity-0 scale-95"}"`}
+                                role="menu"
+                                aria-orientation="vertical"
+                                aria-labelledby="menu-button"
+                                tabIndex={-1}
+                            >
+                                <div className="py-1" role="none">
+                                    <button onClick={handleClickUpdate} className="text-gray-700 w-full text-left block px-4 py-2 text-sm align-middle" role="menuitem" tabIndex={-1} id="menu-item-0"><IconPencil className="float-left mr-2" /> Update</button>
+                                    <Divider />
+                                    <button onClick={handleClickDelete} className="text-gray-700 w-full text-left block px-4 py-2 text-sm" role="menuitem" tabIndex={-1} id="menu-item-1"><IconTrash className="float-left mr-2" /> Delete</button>
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </StyledTableCell>
             </StyledTableRow>
             <StyledTableRow>
                 <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <StrucureFunction
-                            // @ts-ignore
-                            list_function={row.list_function}
+                            list_function={isNull(row.list_function) == false ? row.list_function : []}
                         />
                     </Collapse>
                 </StyledTableCell>

@@ -25,14 +25,14 @@ export const getMerchant = async ({ sort, page, perPage, search, id }: getInterf
 }
 
 interface getMerchantByIdInterface {
-    merchant_id: string
+    merchantId: string
 }
-export const getMerchantById = async ({ merchant_id }: getMerchantByIdInterface) => {
+export const getMerchantById = async ({ merchantId }: getMerchantByIdInterface) => {
     const data = {
         method: 'get',
         url: '/master/merchant/result',
         data: {
-            merchant_id: merchant_id
+            merchant_id: merchantId
         }
     }
     const result = await apis(data)

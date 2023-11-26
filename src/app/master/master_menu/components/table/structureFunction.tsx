@@ -45,9 +45,15 @@ function StructureFunction({ list_function }: InterfaceRow) {
                     </StyledTableRow>
                 </TableHead>
                 <TableBody>
-                    {list_function.length > 0 ? list_function.map((row: rowInterface, i: Key | null | undefined) => (
+                    {(list_function.length > 0) ? list_function.map((row: rowInterface, i: Key | null | undefined) => (
                         <RowFunction key={i} row={row} />
-                    )) : ''}
+                    )) : (
+                        <StyledTableRow>
+                            <StyledTableCell colSpan={4} className='whitespace-nowrap text-center sticky-column' component="th" scope="row">
+                                Tidak Ada Data
+                            </StyledTableCell>
+                        </StyledTableRow>
+                    )}
                 </TableBody>
             </Table>
         </Box>

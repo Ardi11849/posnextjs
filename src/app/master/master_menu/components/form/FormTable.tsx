@@ -39,10 +39,10 @@ const FormTable = ({ dataDetail, deleteData }: any) => {
                                 Nama Menu
                             </StyledTableCell>
                             <StyledTableCell className='font-bold sticky-column font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400'>
-                                Icon
+                                Link Module
                             </StyledTableCell>
                             <StyledTableCell className='font-bold sticky-column font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400'>
-                                Link Module
+                                Icon
                             </StyledTableCell>
                             <StyledTableCell className='font-bold sticky-column font-mono whitespace-nowrap text-center border-solid border-2 border-gray-400'>
                                 Image
@@ -76,16 +76,16 @@ const FormTable = ({ dataDetail, deleteData }: any) => {
                                 dataDetail.map((Data: any, index: any) => (
                                     <StyledTableRow key={index}>
                                         <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
-                                            {Data.nama_menu}
+                                            {Data.name}
+                                        </StyledTableCell>
+                                        <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
+                                            {Data.link}
                                         </StyledTableCell>
                                         <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
                                             <img
                                                 src={URL.createObjectURL(Data.selectedIcon)}
                                                 alt="Thumb"
                                             />
-                                        </StyledTableCell>
-                                        <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
-                                            {Data.link_module}
                                         </StyledTableCell>
                                         <StyledTableCell className='whitespace-nowrap sticky-column' component="th" scope="row">
                                             <img

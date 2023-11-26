@@ -28,13 +28,13 @@ interface InterfaceRow {
         }[];
     }
     number: number | Key | null | undefined;
-    showFromFunction: any;
-    showFromMenu: any;
+    showFormFunction: any;
+    showFormMenu: any;
     showTable: any;
     handleClickOpen: any;
 };
 
-function RowGroup({ row, number, showFromFunction, showFromMenu, showTable, handleClickOpen }: InterfaceRow) {
+function RowGroup({ row, number, showFormFunction, showFormMenu, showTable, handleClickOpen }: InterfaceRow) {
     const [open, setOpen] = useState(false);
     const [openAction, setOpenAction] = useState(false);
 
@@ -103,7 +103,7 @@ function RowGroup({ row, number, showFromFunction, showFromMenu, showTable, hand
             <StyledTableRow>
                 <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <StructureMenu id={row.id} list_detail={row.list_detail} showFromFunction={showFromFunction} showFromMenu={showFromMenu} showTable={showTable} />
+                        <StructureMenu id={row.id} list_detail={row.list_detail} showFormFunction={showFormFunction} showFormMenu={showFormMenu} showTable={showTable} />
                     </Collapse>
                 </StyledTableCell>
             </StyledTableRow>

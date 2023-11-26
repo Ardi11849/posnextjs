@@ -76,3 +76,46 @@ export const deleteMasterMenu = async (data: object) => {
     const result = await apis(datas)
     return result
 }
+
+export const getMasterMenuDetail = async (data: object) => {
+    const datas = {
+        method: 'get',
+        url: '/master/menu-detail/results',
+        data: data
+    }
+    const result = await apis(datas)
+    return result
+}
+
+export const createMasterMenuDetail = async (data: object) => {
+    const datas = {
+        method: 'post',
+        url: '/master/menu-detail/create',
+        data: data,
+        type: 'array'
+    }
+    const result = await apis(datas)
+    return result
+}
+
+export const updateMasterMenuDetail = async (data: object) => {
+    const datas = {
+        method: 'put',
+        url: '/master/menu-detail/update',
+        data: data,
+        type: 'json'
+    }
+    const result = await apis(datas)
+    return result
+}
+
+export const deleteMasterMenuDetail = async (data: object) => {
+    const datas = {
+        method: 'delete',
+        url: '/master/menu-detail/delete',
+        data: data,
+        type: 'json'
+    }
+    const result = await apis(datas)
+    return result
+}

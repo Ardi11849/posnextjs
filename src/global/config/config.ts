@@ -3,7 +3,7 @@ import { Session } from "next-auth";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-export const isNull = (string: Session | string | null | undefined) => {
+export const isNull = (string: Session | string | null | undefined | Array<any>) => {
     if (string != null && string != 'null' && string != undefined && string != 'undefined' && string != '') {
         return false
     }

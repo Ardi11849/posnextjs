@@ -22,12 +22,12 @@ interface InterfaceRow {
             active?: boolean;
         };
     }[];
-    showFromFunction?: any;
-    showFromMenu?: any;
+    showFormFunction?: any;
+    showFormMenu?: any;
     showTable?: any;
 };
 
-function StructureMenu({ id, list_detail, showFromFunction, showFromMenu, showTable }: InterfaceRow) {
+function StructureMenu({ id, list_detail, showFormFunction, showFormMenu, showTable }: InterfaceRow) {
     const [open, setOpen] = useState(false);
     const [openAction, setOpenAction] = useState(false);
 
@@ -57,7 +57,7 @@ function StructureMenu({ id, list_detail, showFromFunction, showFromMenu, showTa
             </Typography>
             <Stack direction="row" spacing={2} className='pb-3'>
                 <motion.div whileHover={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
-                    <Button className='bg-blue-600 text-white' variant="contained" onClick={() => showFromMenu('add', id)}>
+                    <Button className='bg-blue-600 text-white' variant="contained" onClick={() => showFormMenu('create', id)}>
                         Add New
                     </Button>
                 </motion.div>
@@ -88,6 +88,9 @@ function StructureMenu({ id, list_detail, showFromFunction, showFromMenu, showTa
                             // list_function={row.list_function}
                             // @ts-ignore
                             row={row}
+                            showFormMenu = {showFormMenu}
+                            showFormFunction = {showFormFunction}
+                            showTable = {showTable}
                         />
                     )) :
                         <StyledTableRow>

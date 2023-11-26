@@ -6,8 +6,8 @@ import StructureGroup from './components/table/stuctureGroup';
 import CardLayouts from '@/app/component/cardLayout';
 import { Grid, InputLabel } from '@mui/material';
 import FormModalGroup from './components/form/FormModalGroup';
-import { setShowHide, store } from '@/global/redux/store';
-import FormCard from './components/form/FormCard';
+import { setShowHide } from '@/global/redux/store';
+import { CreateFormMenu, UpdateFormMenu } from './components/form/FormCard';
 import Select from 'react-select';
 import { getMerchant, getMerchantById } from '@/app/master/master_merchant/middleware/apis';
 
@@ -25,9 +25,11 @@ export default function PageMasterMenu() {
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(false);
     const [panggil, setPanggil] = useState(true);
-    const [merchant_id, setMerchant_id] = useState('');
     const [refresh, setRefresh] = useState(false);
-    const [uuid, setUuid] = useState<string | null | undefined>();
+    const [merchantId, setMerchantId] = useState('');
+    const [groupId, setGroupId] = useState<string | null | undefined>();
+    const [menuId, setMenuId] = useState<string | null | undefined>();
+    const [functionId, setFunctionId] = useState<string | null | undefined>();
     const [merchant, setMerchant] = useState([{
         value: '',
         label: 'Pilih Merchant'
@@ -40,7 +42,7 @@ export default function PageMasterMenu() {
                 label: "Pilih Merchant"
             }])
             fetchMerchant('null')
-        }, 1000);
+        }, 3000);
         return () => clearTimeout(delay)
     }, [search]);
 
@@ -48,7 +50,7 @@ export default function PageMasterMenu() {
         let response = [];
         if (id != 'null' && id != undefined) {
             const datas = {
-                merchant_id: id
+                merchantId: id
             }
             response = await getMerchantById(datas);
         } else {
@@ -94,11 +96,12 @@ export default function PageMasterMenu() {
         setPanggil(false);
     };
 
-    const handleClickOpen = (action: string, uuid: string | null | undefined) => {
+    const handleClickOpen = (action: string, groupId: string | null | undefined) => {
         setIsOpen(true);
         setAction(action);
         setShowHide(true);
-        setUuid(uuid);
+        setMenuId(null);
+        setGroupId(groupId);
     };
 
     const handleClickClose = () => {
@@ -115,15 +118,18 @@ export default function PageMasterMenu() {
         setShowHideFormFunction(false);
     }
 
-    const showFromMenu = (action: string, uuid: string | null | undefined) => {
+    const showFormMenu = (action: string, groupId: string | null | undefined, menuId: string | null | undefined) => {
+        console.log(menuId);
+        
         setShowHideTable(false);
         setShowHideFormMenu(true);
         setShowHideFormFunction(false);
         setAction(action);
-        setUuid(uuid);
+        setMenuId(menuId);
+        setGroupId(groupId);
     }
 
-    const showFromFunction = () => {
+    const showFormFunction = () => {
         setShowHideTable(false);
         setShowHideFormMenu(false);
         setShowHideFormFunction(true);
@@ -139,8 +145,8 @@ export default function PageMasterMenu() {
                         isOpen={isOpen}
                         close={handleClickClose}
                         action={action}
-                        merchant_id={merchant_id}
-                        uuid={uuid}
+                        merchantId={merchantId}
+                        groupId={groupId}
                     />
                     <CardLayouts label='Master Menu'>
                         <Grid container spacing={3}>
@@ -161,7 +167,7 @@ export default function PageMasterMenu() {
                                     className="basic-single"
                                     classNamePrefix="select"
                                     value={
-                                        merchant.filter((option: { value: string; }) => option.value === merchant_id)
+                                        merchant.filter((option: { value: string; }) => option.value === merchantId)
                                     }
                                     ref={selectRef}
                                     defaultValue={merchant[0]}
@@ -173,14 +179,14 @@ export default function PageMasterMenu() {
                                     name="color"
                                     options={merchant}
                                     onChange={(e: any) => {
-                                        setMerchant_id(e.value)
+                                        setMerchantId(e.value)
                                     }}
                                     onInputChange={(inputValue) => { setSearch(inputValue), setLoading(true) }}
                                 />
                             </Grid>
                         </Grid>
-                        {merchant_id != '' ?
-                            <StructureGroup refresh={refresh} merchant_id={merchant_id} handleClickOpen={handleClickOpen} showTable={showTable} showFromMenu={showFromMenu} showFromFunction={showFromFunction} />
+                        {merchantId != '' ?
+                            <StructureGroup refresh={refresh} merchantId={merchantId} handleClickOpen={handleClickOpen} showTable={showTable} showFormMenu={showFormMenu} showFormFunction={showFormFunction} />
                             : <div className='text-center text-red-500 font-bold text-lg py-5'>Select Merchant First</div>
                         }
                     </CardLayouts>
@@ -188,9 +194,15 @@ export default function PageMasterMenu() {
                 : ''
             }
             {showHideFormMenu &&
+                (action == 'create') ?
                 <CardLayouts label='Add Menu'>
-                    <FormCard showTable={showTable} showFromMenu={showFromMenu} showFromFunction={showFromFunction} uuid={uuid} action={action} merchant_id={merchant_id} />
+                    <CreateFormMenu showTable={showTable} groupId={groupId} action={action} merchantId={merchantId} />
                 </CardLayouts>
+                : showHideFormMenu && (action == 'update') ?
+                <CardLayouts label='Update Menu'>
+                    <UpdateFormMenu menuId={menuId} showTable={showTable} groupId={groupId} action={action} merchantId={merchantId} />
+                </CardLayouts>
+                : ''
             }
         </Suspense>
     )
