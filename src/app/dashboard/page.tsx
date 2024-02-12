@@ -48,7 +48,7 @@ const Dashboard = () => {
     return (
         <Suspense fallback={<Loading />}>
             <DynamicHeader title="Dashboard" url="/" />
-            <div className="px-4 h-[calc(100vh-6rem)] overflow-y-auto">
+            <div className="px-4 h-[calc(100vh-63px)] overflow-y-auto">
                 <div className="bg-gray-200 rounded-lg">
                     {Menus.map((row, index) => (
                         <div key={index}>

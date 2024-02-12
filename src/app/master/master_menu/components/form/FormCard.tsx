@@ -500,3 +500,66 @@ export const UpdateFormMenu = ({ menuId, action, showTable }: any) => {
         </>
     )
 }
+
+export const CreateFormFunction = ({ groupId, action, showTable, merchantId }: any) => {
+    const [dataDetail, setDataDetail] = useState([{}]);
+    const [labelMenu, setLabelMenu] = useState('');
+    const [labelFunction, setLabelFunction] = useState('');
+    const [linkModule, setLinkModule] = useState('');
+    const [image, setImage] = useState('');
+
+    const saveData = async () => {
+        const formData = new FormData();
+        formData.append('groupId', groupId);
+        formData.append('menuName', labelMenu);
+        formData.append('functionName', labelFunction);
+        formData.append('linkModule', linkModule);
+        formData.append('image', image);
+        formData.append('active', 'true');
+        formData.append('merchantId', merchantId);
+    }
+
+    return (
+        <>
+            <Box sx={{ paddingLeft: 5, paddingRight: 5, paddingTop: 3 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={2}>
+                        <InputLabel
+                            sx={{
+                                display: "flex",
+                                justifyContent: "left",
+                                fontWeight: 700
+                            }}
+                        >
+                            Menu
+                        </InputLabel>
+                    </Grid>
+                    <Grid item xs={12} sm={10}>
+                        <TextField
+                            required
+                            id="menu"
+                            name="menu"
+                            label="Menu"
+                            multiline
+                            fullWidth
+                            size="small"
+                            autoComplete="off"
+                            value={labelMenu}
+                            onChange={(e) => setLabelMenu(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={5} >
+                        <button onClick={showTable} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full">
+                            <IconArrowBadgeLeft className="float-left mr-2" /> Back
+                        </button>
+                    </Grid>
+                    <Grid item xs={12} sm={7} >
+                        <button onClick={saveData} className="float-right bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                            <IconDeviceFloppy className="float-left mr-2" /> Save
+                        </button>
+                    </Grid>
+                </Grid>
+            </Box >
+        </>
+    )
+}

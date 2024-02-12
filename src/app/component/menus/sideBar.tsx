@@ -18,7 +18,6 @@ const Sidebar = () => {
     const { data: session, status } = useSession({ required: true, onUnauthenticated() { push("/") } });
 
     useEffect(() => {
-        // @ts-ignore
         if (session?.error === "RefreshAccessTokenError") {
             signOut(); // Force sign in to hopefully resolve error
         }

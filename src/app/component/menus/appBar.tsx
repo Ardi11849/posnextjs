@@ -47,21 +47,22 @@ const Header = ({ title, url }: HeaderProps) => {
     
     return (
         <>
-            <header className="bg-gray-50 py-5">
+            <header className="bg-gray-50 py-2">
                 <div className="grid-cols-3 container-fluid mx-auto flex items-center">
-                    <div className="text-black font-semibold text-xl pr-[5rem]"><img className="px-1 pt-1" width={150} src="https://shekinahland.com/wp-content/uploads/2022/01/logoipsum-logo-17-01.png" alt="ChitChat Logo" /></div>
+                    <div className="text-black font-semibold text-xl pr-[50px]"><img className="px-2 pt-1" width={130} src="https://shekinahland.com/wp-content/uploads/2022/01/logoipsum-logo-17-01.png" alt="ChitChat Logo" /></div>
                     <motion.button
                         className='rounded-lg'
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setIsVisible(!isVisible)}
-                    ><IconList className="w-7 h-7" />
+                    >
+                        <IconList className="w-7 h-7" />
                     </motion.button>
                     <nav className="space-x-4 pl-[2rem]">
                     </nav>
                     <motion.nav
                         initial={false}
                         animate={isOpen ? "open" : "closed"}
-                        className="absolute top-5 right-[5rem] inline-block h-12 w-12"
+                        className="absolute top-3 right-[35px] inline-block h-8 w-8"
                     >
                         <motion.button
                             whileTap={{ scale: 0.97 }}
@@ -110,7 +111,7 @@ const Header = ({ title, url }: HeaderProps) => {
                     </motion.nav>
                 </div>
             </header>
-            <motion.div className='float-left bg-gray-50 w-[17rem] text-white h-[calc(100vh-6rem)] overflow-y-scroll' animate={isVisible ? show : hide}> <Sidebar /> </motion.div>
+            <motion.div className='float-left bg-gray-50 text-white h-[calc(100vh-60px)] overflow-y-scroll' animate={isVisible ? show : hide}> <Sidebar /> </motion.div>
         </>
     );
 };

@@ -31,6 +31,7 @@ export const StyledTablePaginataion = styled(TablePagination)(({ theme }) => ({
         color: theme.palette.common.black,
         padding: 0,
         minHeight: 0,
+        maxHeight: 40,
         text: 'center',
         borderColor: 'black',
         fontFamily: 'monospace',

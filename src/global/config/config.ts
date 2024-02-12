@@ -3,6 +3,7 @@ import { Session } from "next-auth";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+const url = process.env.NEXT_PUBLIC_API_URL;
 export const isNull = (string: Session | string | null | undefined | Array<any>) => {
     if (string != null && string != 'null' && string != undefined && string != 'undefined' && string != '') {
         return false
@@ -14,7 +15,7 @@ async function refreshAccessToken(token: any) {
     try {
         let result = await axios({
             method: 'get',
-            url: 'https://api-pos-admin.digylabs.com/api/v1/auth/refresh-token',
+            url: url + '/auth/refresh-token',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token.accessToken
@@ -77,8 +78,21 @@ export const authOptions: NextAuthOptions = {
                     email: string;
                     password: string;
                 };
+                
+                /** Dummy Login */
+                return {
+                     id: 1,
+                     name: 'Admin',
+                     email: email,
+                     image: 'https://i.pravatar.cc/300',
+                     role: 'admin',
+                     accessToken: 'token',
+                     expiredAt: '2028-01-01 00:00:00',
+                     error: '',
+                }
 
-                let result = await axios.post('https://api-pos-admin.digylabs.com/api/v1/auth/login', { email: email, password: password })
+                /** Login */
+                let result = await axios.post(url + '/auth/login', { email: email, password: password })
                     .then((response) => {
                         return response.data.data;
                     }).catch((error) => {
